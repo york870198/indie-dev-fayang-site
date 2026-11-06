@@ -2,28 +2,46 @@
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fayang｜獨立遊戲開發者 Indie game developer</title>
 <meta name="description" content="Fayang 是獨立遊戲開發者。這裡列出 Fayang 的遊戲，以及各款遊戲的隱私權政策與服務條款。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..600&family=Funnel+Sans:wght@400..600&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="style.css">
 </head>
 <body class="home">
+<a class="skip" href="#content">跳到主要內容</a>
 <header>
+<div class="studio-id">
+<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#8a3b12"/><path fill="#fdfcf9" d="M9 6h15v5H14v4h8v5h-8v6H9z"/></svg>
 <h1>Fayang</h1>
-<p>獨立遊戲開發者。<span lang="en">Indie game developer.</span></p>
+</div>
+<p class="lead">獨立遊戲開發者。<span lang="en">Indie game developer.</span></p>
 </header>
 
-<main>
+<main id="content">
 <h2>遊戲 <span lang="en">Games</span></h2>
 <ul class="games">
-<li class="game">
-<img src="mountaindog/icon.png" alt="" width="64" height="64">
-<div>
+<!-- 新增產品時複製下方 <li class="game">...</li>；style="--game-tint: #..." 可選填該作代表色，省略則自動套用中性底色 -->
+<li class="game" style="--game-tint: #bcd9f3">
+<div class="game-stage">
+<img src="mountaindog/icon.png" alt="" width="96" height="96">
+</div>
+<div class="game-body">
+<div class="game-head">
 <h3 lang="en">Mountain Dog</h3>
-<p>輸入任何食物端給伯恩山犬吃，讓牠長得跟山一樣大。<br><span lang="en">Feed a Bernese Mountain Dog any food you can type, until it grows as big as a mountain.</span></p>
-<p class="meta" lang="en">Android</p>
-<p><a href="mountaindog/">隱私權與條款 · <span lang="en">Privacy &amp; Terms</span></a></p>
+<p class="meta"><span class="badge" lang="en">Android</span></p>
+<p class="release-status">尚未上架 · <span lang="en">Not yet released</span></p>
+</div>
+<p class="game-desc">輸入任何食物端給伯恩山犬吃，讓牠長得跟山一樣大。<br><span lang="en">Feed a Bernese Mountain Dog any food you can type, until it grows as big as a mountain.</span></p>
+<p class="game-cta">
+<a class="card-link" href="mountaindog/">
+<span>隱私權與條款 · <span lang="en">Privacy &amp; Terms</span></span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</p>
 </div>
 </li>
 </ul>

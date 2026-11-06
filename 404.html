@@ -2,20 +2,46 @@
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>找不到頁面 Page not found｜Fayang</title>
 <!-- GitHub Pages serves this file at any missing path, so every URL here is root-relative -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..600&family=Funnel+Sans:wght@400..600&display=swap" rel="stylesheet">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/style.css">
 </head>
-<body>
-<main>
+<body class="not-found">
+<a class="skip" href="#content">跳到主要內容</a>
+<header>
+<nav aria-label="網站導覽">
+<p class="crumbs">
+<a class="crumb-brand" href="/" aria-label="Fayang">
+<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#8a3b12"/><path fill="#fdfcf9" d="M9 6h15v5H14v4h8v5h-8v6H9z"/></svg>
+</a>
+</p>
+</nav>
+</header>
+
+<main id="content">
+<div class="not-found-box">
 <h1>找不到這個頁面</h1>
-<p>網址可能打錯了，或這個頁面已經移動。<br><span lang="en">This page doesn't exist. The address may be mistyped, or the page may have moved.</span></p>
+<p class="not-found-desc">網址可能打錯了，或這個頁面已經移動。<br><span lang="en">This page doesn't exist. The address may be mistyped, or the page may have moved.</span></p>
 <ul class="docs">
-<li><a href="/">回到 Fayang 首頁 · <span lang="en">Back to home</span></a></li>
-<li><a href="/mountaindog/"><span lang="en">Mountain Dog</span> 隱私權與條款 · <span lang="en">Privacy &amp; Terms</span></a></li>
+<li class="doc-card">
+<a href="/">
+<span>回到 Fayang 首頁 · <span lang="en">Back to home</span></span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</li>
+<li class="doc-card">
+<a href="/mountaindog/">
+<span><span lang="en">Mountain Dog</span> 隱私權與條款 · <span lang="en">Privacy &amp; Terms</span></span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</li>
 </ul>
+</div>
 </main>
 
 <footer>

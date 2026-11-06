@@ -2,9 +2,12 @@
 <html lang="zh-Hant-TW">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mountain Dog｜Fayang</title>
 <meta name="description" content="Fayang 開發的 Android 遊戲 Mountain Dog：隱私權政策與服務條款。Privacy Policy and Terms of Service for Mountain Dog.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..600&family=Funnel+Sans:wght@400..600&display=swap" rel="stylesheet">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
 </head>
@@ -12,25 +15,63 @@
 <a class="skip" href="#content">跳到主要內容</a>
 <header>
 <nav aria-label="網站導覽">
-<p class="crumbs"><a href="../">Fayang 首頁</a></p>
+<p class="crumbs">
+<a class="crumb-brand" href="../">
+<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#8a3b12"/><path fill="#fdfcf9" d="M9 6h15v5H14v4h8v5h-8v6H9z"/></svg>
+<span>Fayang 首頁 · <span lang="en">Home</span></span>
+</a>
+</p>
 </nav>
 </header>
 
 <main id="content">
-<div class="game">
-<img src="icon.png" alt="" width="64" height="64">
-<div>
+<div class="game hub-hero" style="--game-tint: #bcd9f3">
+<div class="game-stage">
+<img src="icon.png" alt="" width="96" height="96">
+</div>
+<div class="game-body">
+<div class="game-head">
 <h1 lang="en">Mountain Dog</h1>
-<p>輸入任何食物端給伯恩山犬吃，讓牠長得跟山一樣大。<br><span lang="en">Feed a Bernese Mountain Dog any food you can type, until it grows as big as a mountain.</span></p>
-<p class="meta" lang="en">Android</p>
+<p class="meta"><span class="badge" lang="en">Android</span></p>
+<p class="release-status">尚未上架 · <span lang="en">Not yet released</span></p>
+</div>
+<p class="game-desc">輸入任何食物端給伯恩山犬吃，讓牠長得跟山一樣大。<br><span lang="en">Feed a Bernese Mountain Dog any food you can type, until it grows as big as a mountain.</span></p>
+<!-- Google Play 正式上架後，取消下方註解並填入商店連結即可啟用預留按鈕樣式：
+<div class="game-actions">
+<a class="btn btn--primary" href="https://play.google.com/store/apps/details?id=com.fayang.mountaindoggame" rel="noopener">
+<span lang="en">Google Play</span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</div>
+-->
 </div>
 </div>
 
-<h2>政策與條款 <span lang="en">Policies</span></h2>
+<section class="hub-docs" aria-labelledby="policies-h">
+<h2 id="policies-h">政策與條款 <span lang="en">Policies</span></h2>
 <ul class="docs">
-<li><a href="privacy.html">隱私權政策</a> · <a href="privacy-en.html" lang="en" hreflang="en">Privacy Policy</a></li>
-<li><a href="terms.html">服務條款</a> · <a href="terms-en.html" lang="en" hreflang="en">Terms of Service</a></li>
+<li class="doc-card">
+<a href="privacy.html">
+<span>隱私權政策</span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+<a href="privacy-en.html" lang="en" hreflang="en">
+<span>Privacy Policy</span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</li>
+<li class="doc-card">
+<a href="terms.html">
+<span>服務條款</span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+<a href="terms-en.html" lang="en" hreflang="en">
+<span>Terms of Service</span>
+<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
+</a>
+</li>
 </ul>
+</section>
 </main>
 
 <footer>

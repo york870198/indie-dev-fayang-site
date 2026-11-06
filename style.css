@@ -1,116 +1,1105 @@
+/* ==========================================================================
+   Fayang — Indie Game Developer Design System
+   Distilled from design-taste-frontend (tasteskill 2.5):
+   - 90–95% warm neutral three-step surface hierarchy (--bg, --surface, --card)
+   - Single brand accent (#8a3b12 chestnut-terracotta, zero violet)
+   - Unified 4/8px spacing scale, soft nested radii (20px card / 12px stage)
+   - Pure CSS atmospheric light wash & tactile hover/press motion layer
+   ========================================================================== */
+
 :root {
   color-scheme: light dark;
-  --fg: #222; --bg: #fdfcf9; --muted: #666; --link: #8a3b12; --line: #e4dfd4; --select: #f3d9c7;
-  --measure: 36rem; --rail: 17rem; --rail-gap: 3rem; --gutter: 16px;
-}
-@media (prefers-color-scheme: dark) {
-  :root { --fg: #e8e6e1; --bg: #1b1a18; --muted: #a09d97; --link: #f0a070; --line: #3a3733; --select: #5a3a26; }
+
+  /* Light palette: warm paper neutrals + Bernese chestnut accent */
+  --bg: #f5f2eb;
+  --surface: #ebe6db;
+  --card: #fdfcf9;
+  --ink: #201e1b;
+  --muted: #5f5951;
+  --accent: #8a3b12;
+  --action: #8a3b12;
+  --action-ink: #fdfcf9;
+  --line-hex: #dcd6c9;
+  --line-strong-hex: #c5bdb0;
+  --line: color-mix(in oklab, var(--ink) 11%, transparent);
+  --line-strong: color-mix(in oklab, var(--ink) 21%, transparent);
+  --card-hi: rgb(255 255 255 / .65);
+  --select: #f2d8c7;
+  --stage-mix: 46%;
+
+  /* Typography */
+  --font-display: "Funnel Display", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-text: "Funnel Sans", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  /* 4/8px Spacing scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 64px;
+  --s-9: 96px;
+
+  /* Layout & equal content edges */
+  --wrap: 68rem;         /* 1088px shared studio & doc container */
+  --measure: 39rem;      /* ~62ch optimal reading column */
+  --rail: 15.5rem;       /* sticky TOC rail on desktop */
+  --rail-gap: 3.5rem;
+  --gut: 20px;
+
+  /* Soft radius family (outer card 20px - 8px inset = 12px inner stage) */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-btn: 10px;
+
+  /* Motion tokens (motion.md) */
+  --m-in: 140ms;
+  --m-out: 200ms;
+  --m-press: 90ms;
+  --m-image: 600ms;
+  --m-ease: cubic-bezier(.2, .8, .2, 1);
+
+  /* Subtle SVG film/paper grain for studio ground (zero WebGL, static) */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.032'/%3E%3C/svg%3E");
 }
 
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.7 system-ui, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif; }
-body > * { width: min(100%, calc(var(--measure) + 2 * var(--gutter))); margin-inline: auto; padding-inline: var(--gutter); }
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151413;
+    --surface: #1f1d1b;
+    --card: #1b1917;
+    --ink: #edeae4;
+    --muted: #a39e96;
+    --accent: #f0a070;
+    --action: #e48f5c;
+    --action-ink: #151413;
+    --line-hex: #2e2b28;
+    --line-strong-hex: #433f3a;
+    --line: color-mix(in oklab, var(--ink) 12%, transparent);
+    --line-strong: color-mix(in oklab, var(--ink) 22%, transparent);
+    --card-hi: rgb(255 255 255 / .05);
+    --select: #543623;
+    --stage-mix: 18%;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.028'/%3E%3C/svg%3E");
+  }
+}
+
+@media (min-width: 40rem) {
+  :root { --gut: 36px; }
+}
+@media (min-width: 64rem) {
+  :root { --gut: 56px; }
+}
+
+/* --------------------------------------------------------------------------
+   Base & Atmospheric Ground
+   -------------------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  margin: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg);
+  color: var(--ink);
+  font: 400 16.5px/1.72 var(--font-text);
+  font-feature-settings: "kern" 1;
+}
+
+/* Pure CSS studio atmosphere on Home, Hub & 404 (policy docs stay flat for long reading) */
+body:not(.doc)::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    var(--grain),
+    radial-gradient(ellipse 75% 46% at 50% -6%, color-mix(in oklab, var(--accent) 8%, transparent), transparent 72%),
+    radial-gradient(ellipse 55% 40% at 88% 12%, color-mix(in oklab, #bcd9f3 14%, transparent), transparent 70%);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.doc)::before {
+    background-image:
+      var(--grain),
+      radial-gradient(ellipse 75% 44% at 50% -8%, color-mix(in oklab, var(--accent) 9%, transparent), transparent 70%),
+      radial-gradient(ellipse 50% 38% at 85% 10%, rgb(120 165 210 / .05), transparent 70%);
+  }
+}
+
+/* Equal left and right content edges across all pages */
+body > :is(header, main, footer) {
+  width: min(100%, calc(var(--wrap) + 2 * var(--gut)));
+  margin-inline: auto;
+  padding-inline: var(--gut);
+}
+
+main { flex: 1; }
+
 ::selection { background: var(--select); }
 
-a { color: var(--link); text-underline-offset: .18em; }
-a:hover { text-decoration-thickness: 2px; }
-:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 2px; }
+/* --------------------------------------------------------------------------
+   Typography & Bilingual Rhythm
+   -------------------------------------------------------------------------- */
 
-h1 { margin: 1.5rem 0 .25rem; font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.125rem); line-height: 1.3; text-wrap: balance; }
-h2 { margin: 2.75rem 0 .5rem; font-size: 1.4rem; line-height: 1.4; scroll-margin-top: 4rem; } /* clears the sticky contents bar */
-h3 { font-size: 1.2rem; line-height: 1.4; }
-code { overflow-wrap: anywhere; }
-.meta { margin-top: 0; color: var(--muted); font-size: .9rem; }
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  color: var(--ink);
+  text-wrap: balance;
+}
 
-/* Page chrome: links get padding so they stay comfortable to tap on phones */
-header nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0 1.25rem; padding-block: .25rem; border-bottom: 1px solid var(--line); font-size: .95rem; }
-.crumbs { margin: 0; color: var(--muted); }
-header nav a, .links a { display: inline-block; padding-block: .6rem; }
-header > h1 { margin-top: 3rem; }
-header > p { margin: 0; }
-footer { margin-top: 3rem; padding-bottom: 2rem; font-size: .95rem; }
-footer > * { margin: 0; padding-top: 1rem; border-top: 1px solid var(--line); }
-.links { display: flex; flex-wrap: wrap; gap: 0 1.25rem; padding-top: .4rem; }
+h1 {
+  margin: 0;
+  font-size: clamp(1.9rem, 1.55rem + 1.5vw, 2.55rem);
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+}
 
-/* Game row: on the home page the whole row is one link */
-.games { margin: 0; padding: 0; list-style: none; }
-.game { --icon: 64px; position: relative; display: grid; grid-template-columns: var(--icon) 1fr; gap: 0 1rem; }
-.games .game { padding-block: 1.25rem; border-top: 1px solid var(--line); }
-.game img { display: block; width: var(--icon); height: var(--icon); border-radius: 22%; }
-.game h1, .game h3 { margin: 0; align-self: center; }
-.game p { margin: .25rem 0 0; }
-/* Phones: icon and name share a row, the text gets the full width below */
-.game > div { display: contents; }
-.game > div > p { grid-column: 1 / -1; }
-.game > div > p:first-of-type { margin-top: .75rem; }
-main > .game { margin-top: 2rem; }
-.games a::after { content: ""; position: absolute; inset: 0; }
-.games .game:hover a { text-decoration-thickness: 2px; }
-.games a:focus-visible { outline: none; }
-.games a:focus-visible::after { outline: 2px solid var(--link); outline-offset: -2px; border-radius: 2px; }
+.home header h1 {
+  font-size: clamp(2.35rem, 1.85rem + 2.2vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.038em;
+}
 
-.docs { margin: 0; padding: 0; list-style: none; }
-.docs a { display: inline-block; padding-block: .5rem; }
+h2 {
+  margin: var(--s-7) 0 var(--s-4);
+  font-size: clamp(1.32rem, 1.2rem + 0.45vw, 1.55rem);
+  line-height: 1.32;
+  letter-spacing: -0.022em;
+  scroll-margin-top: 4.5rem;
+}
 
-/* Contents on policy pages: a sticky bar on phones, its list opens over the text so the page doesn't jump */
-.toc { position: sticky; top: 0; z-index: 1; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); border-bottom: 1px solid var(--line); background: var(--bg); }
-.toc summary { padding-block: .6rem; font-weight: 600; cursor: pointer; }
-.toc ul { position: absolute; inset: 100% 0 auto; max-height: calc(100dvh - 4rem); margin: 0; padding: 0 var(--gutter) .5rem; overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line); background: var(--bg); list-style: none; }
-.toc a { display: block; padding-block: .5rem; }
+h3 {
+  margin: 0;
+  font-size: clamp(1.22rem, 1.12rem + 0.35vw, 1.42rem);
+  line-height: 1.28;
+  letter-spacing: -0.02em;
+}
 
-.skip { position: absolute; top: .5rem; left: var(--gutter); z-index: 2; width: auto; margin: 0; padding: .6rem 1rem; background: var(--bg); transform: translateY(-200%); }
-.skip:focus { transform: none; }
+p, ul, ol { margin: 0 0 1rem; }
+article :is(ul, ol) > li + li { margin-top: 0.35rem; }
 
-/* The narrowest phones can't fit the whole trail beside the language link; the footer still links home */
-@media (max-width: 24rem) {
+/* Bilingual visual de-noising: secondary inline English stays readable (>=4.5:1) without shouting */
+html[lang="zh-Hant-TW"] :is(h2, footer p) > span[lang="en"] {
+  font-weight: 400;
+  font-size: 0.86em;
+  color: var(--muted);
+  letter-spacing: -0.01em;
+}
+html[lang="zh-Hant-TW"] h2 > span[lang="en"] {
+  margin-left: 0.35em;
+}
+.lead {
+  margin: var(--s-2) 0 0;
+  font-size: clamp(1.02rem, 0.98rem + 0.2vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--ink);
+}
+.lead > span[lang="en"],
+.game-desc > span[lang="en"],
+.not-found-desc > span[lang="en"] {
+  color: var(--muted);
+  font-size: 0.94em;
+}
+.game-desc > span[lang="en"],
+.not-found-desc > span[lang="en"] {
+  display: inline-block;
+  margin-top: 0.25rem;
+  line-height: 1.58;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+  padding: 0.14em 0.42em;
+  border-radius: 6px;
+  background: var(--surface);
+  border: 1px solid var(--line-hex);
+  border-color: var(--line);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Platform pill badge (>=13px per tasteskill system.md) */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.22rem 0.62rem;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line-hex);
+  border-color: var(--line);
+  color: var(--muted);
+  font: 500 0.8125rem/1.2 var(--font-text);
+  letter-spacing: 0.01em;
+}
+
+/* --------------------------------------------------------------------------
+   Links, Buttons & Motion Layer (Pure CSS)
+   -------------------------------------------------------------------------- */
+
+a {
+  color: var(--accent);
+  text-underline-offset: 0.2em;
+}
+
+/* Smooth left-to-right drawn underline on running links */
+:is(article a, footer a, .crumbs a:not(.crumb-brand), .meta a) {
+  text-decoration: none;
+  background-image:
+    linear-gradient(currentColor, currentColor),
+    linear-gradient(color-mix(in oklab, currentColor 42%, transparent), color-mix(in oklab, currentColor 42%, transparent));
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  background-position: right 0 bottom 0, 0 100%;
+  padding-bottom: 1px;
+  transition: background-size var(--m-out) var(--m-ease), color var(--m-out) var(--m-ease);
+}
+
+:is(article a, footer a, .crumbs a:not(.crumb-brand), .meta a):is(:hover, :focus-visible) {
+  background-size: 100% 1px, 100% 1px;
+  background-position: left 0 bottom 0, 0 100%;
+  transition-duration: var(--m-in);
+}
+
+/* Drawn arrow glyph (motion.css) */
+.m-arrow {
+  width: 13px;
+  height: 13px;
+  flex: none;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.m-arrow__stem {
+  opacity: 0;
+  transform: scaleX(.2);
+  transform-origin: 1px 50%;
+  transform-box: fill-box;
+  transition: opacity var(--m-out) var(--m-ease), transform var(--m-out) var(--m-ease);
+}
+.m-arrow__head {
+  transition: transform var(--m-out) var(--m-ease);
+}
+
+/* Buttons & language pill (pre-built for Google Play store slot & bilingual switcher) */
+.btn,
+.btn-lang {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.55rem 1.2rem;
+  border-radius: var(--r-btn);
+  font: 500 0.9375rem/1.2 var(--font-text);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--m-out) var(--m-ease),
+    border-color var(--m-out) var(--m-ease),
+    color var(--m-out) var(--m-ease),
+    transform var(--m-press) var(--m-ease);
+}
+
+.btn--primary {
+  background: var(--action);
+  color: var(--action-ink);
+  border: 1px solid transparent;
+}
+
+.btn--secondary,
+.btn-lang {
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line-strong-hex);
+  border-color: var(--line-strong);
+}
+
+.btn-lang {
+  min-height: 44px;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 40rem) {
+  .btn-lang {
+    min-height: 44px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* Reserved container for Google Play CTA once published */
+.game-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+}
+
+@media (max-width: 29.99rem) {
+  .game-actions .btn { width: 100%; }
+}
+
+/* Focus settling ring */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+  animation: m-focus var(--m-out) var(--m-ease);
+}
+
+@keyframes m-focus {
+  from { outline-offset: 6px; outline-color: transparent; }
+}
+
+/*Accessibility skip link (clip-path hidden until focused so it never shifts layout) */
+.skip {
+  position: fixed;
+  top: var(--s-3);
+  left: var(--gut);
+  z-index: 30;
+  width: auto;
+  margin: 0;
+  padding: 0.6rem 1rem;
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  font-weight: 500;
+  text-decoration: none;
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+}
+.skip:focus {
+  clip-path: none;
+  height: auto;
+  overflow: visible;
+}
+
+/* --------------------------------------------------------------------------
+   Header, Brand Mark & Footer Chrome
+   -------------------------------------------------------------------------- */
+
+.brand-mark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 5px;
+  display: block;
+}
+
+@media (min-width: 40rem) {
+  .brand-mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+  }
+}
+
+/* Sub-page top navigation bar (.hub, .doc, .not-found) */
+header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-1) var(--s-3);
+  min-height: 58px;
+  padding-block: var(--s-2);
+  border-bottom: 1px solid var(--line-hex);
+  border-bottom-color: var(--line);
+  font-size: 0.9rem;
+}
+
+@media (min-width: 40rem) {
+  header nav {
+    gap: var(--s-2) var(--s-4);
+    min-height: 64px;
+    font-size: 0.9375rem;
+  }
+}
+
+.crumbs {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--muted);
+}
+
+.crumb-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding-block: 0.4rem;
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+}
+.crumb-brand span[lang="en"] {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.crumbs a:not(.crumb-brand) {
+  display: inline-block;
+  padding-block: 0.4rem;
+}
+
+/* Home studio masthead */
+.home header {
+  padding-top: clamp(2.75rem, 7vh, 5rem);
+  padding-bottom: clamp(2rem, 4vh, 3rem);
+  border-bottom: 1px solid var(--line-hex);
+  border-bottom-color: var(--line);
+}
+
+.studio-id {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.home .brand-mark {
+  width: clamp(40px, 3.2vw + 28px, 50px);
+  height: clamp(40px, 3.2vw + 28px, 50px);
+  border-radius: 11px;
+  box-shadow: 0 2px 6px rgb(0 0 0 / .08);
+}
+
+@media (min-width: 48rem) {
+  .home header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-6);
+  }
+  .home .lead {
+    margin: 0;
+    text-align: right;
+  }
+}
+
+/* Footer */
+footer {
+  margin-top: var(--s-6);
+  padding-bottom: var(--s-5);
+  font-size: 0.9375rem;
+  color: var(--muted);
+}
+
+@media (min-width: 42rem) {
+  footer {
+    margin-top: var(--s-8);
+    padding-bottom: var(--s-6);
+  }
+}
+
+footer > * {
+  margin: 0;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line-hex);
+  border-top-color: var(--line);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-5);
+  padding-top: var(--s-4);
+}
+
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink);
+  text-decoration: none;
+  background-image:
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--line-strong), var(--line-strong));
+  background-repeat: no-repeat;
+  background-size: 0% 1px, 100% 1px;
+  background-position: right 0 bottom 8px, 0 calc(100% - 8px);
+  transition: background-size var(--m-out) var(--m-ease), color var(--m-out) var(--m-ease);
+}
+
+.links a:is(:hover, :focus-visible) {
+  color: var(--accent);
+  background-size: 100% 1px, 100% 1px;
+  background-position: left 0 bottom 8px, 0 calc(100% - 8px);
+  transition-duration: var(--m-in);
+}
+
+/* --------------------------------------------------------------------------
+   Games Catalog & Multi-Product Adaptive Cards (N = 1 -> 2 -> 3+)
+   -------------------------------------------------------------------------- */
+
+.home main > h2 {
+  margin-top: clamp(2rem, 4.5vh, 3.25rem);
+  margin-bottom: var(--s-5);
+}
+
+.games {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-5);
+}
+
+/* Multi-product scaling:
+   - N >= 2: 2-column equal-height studio cards from 48rem (768px+)
+   - N == 3: 3-column full row from 64rem (1024px+) so no half-empty orphan cell appears
+   - N == 1 (:only-child): full-width horizontal split showcase card */
+@media (min-width: 48rem) {
+  .games {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 64rem) {
+  .games:has(> .game:nth-child(3):last-child) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.games > .game:only-child {
+  grid-column: 1 / -1;
+}
+
+/* Studio Card Geometry (cards.md: 20px outer card, 8px inset, 12px lit stage panel) */
+.game {
+  --stage-bg: color-mix(in oklab, var(--game-tint, var(--surface)) var(--stage-mix), var(--surface));
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: var(--s-2);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--line-hex);
+  border-color: var(--line);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  transition:
+    transform 180ms var(--m-ease),
+    border-color var(--m-out) var(--m-ease),
+    box-shadow 180ms var(--m-ease);
+}
+
+/* Lit icon stage panel */
+.game-stage {
+  display: grid;
+  place-items: center;
+  min-height: 136px;
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  overflow: clip;
+  background-color: var(--surface);
+  background-color: var(--stage-bg);
+  background-image: radial-gradient(
+    circle at 50% 45%,
+    color-mix(in oklab, var(--card) 55%, transparent),
+    transparent 74%
+  );
+  border: 1px solid color-mix(in oklab, var(--ink) 7%, transparent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .game {
+    --stage-bg: color-mix(in oklab, var(--game-tint, var(--surface)) 12%, var(--bg));
+  }
+  .game-stage {
+    background-image: radial-gradient(
+      circle at 50% 48%,
+      color-mix(in oklab, var(--game-tint, var(--ink)) 18%, transparent),
+      transparent 70%
+    );
+    border-color: color-mix(in oklab, var(--ink) 10%, transparent);
+  }
+}
+
+/* 96x96 CSS px = exact 192x192 native resolution on 2x DPR (zero upscale blur) */
+.game-stage img {
+  display: block;
+  width: 88px;
+  height: 88px;
+  border-radius: 22.5%;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / .08),
+    0 10px 22px -10px rgb(0 0 0 / .22),
+    inset 0 0 0 1px rgb(0 0 0 / .08);
+  transition: transform var(--m-image) var(--m-ease);
+}
+
+.game-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: var(--s-4) var(--s-4) var(--s-4);
+}
+
+.game-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-3);
+}
+
+.game-desc {
+  margin: var(--s-3) 0 0;
+  max-width: 54ch;
+}
+
+.game-cta {
+  margin: auto 0 0;
+  padding-top: var(--s-5);
+}
+
+.card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: 500 0.9375rem/1.4 var(--font-text);
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.card-link span[lang="en"] {
+  font-weight: 400;
+}
+
+/* Stretched full-card link on Home */
+.games .card-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  z-index: 1;
+}
+.games .card-link:focus-visible { outline: none; }
+.games .card-link:focus-visible::after {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  animation: m-focus var(--m-out) var(--m-ease);
+}
+
+/* Horizontal showcase layout when N = 1 on Home, and always for the Hub Hero */
+@media (min-width: 42rem) {
+  .games > .game:only-child,
+  .hub-hero {
+    display: grid;
+    grid-template-columns: minmax(200px, 248px) 1fr;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .games > .game:only-child .game-stage,
+  .hub-hero .game-stage {
+    min-height: 212px;
+  }
+
+  .games > .game:only-child .game-stage img,
+  .hub-hero .game-stage img {
+    width: 96px;
+    height: 96px;
+  }
+
+  .games > .game:only-child .game-body,
+  .hub-hero .game-body {
+    justify-content: center;
+    padding: var(--s-6) var(--s-6) var(--s-6) var(--s-6);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Game Hub Page (.hub) & Document Cards (.docs)
+   -------------------------------------------------------------------------- */
+
+.hub main,
+.not-found main {
+  padding-top: clamp(1.5rem, 4.5vh, 3.5rem);
+}
+
+.hub-docs {
+  margin-top: clamp(1.5rem, 4.5vh, 3.5rem);
+}
+
+.hub-docs > h2 {
+  margin-top: 0;
+  margin-bottom: var(--s-3);
+}
+
+.docs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-3);
+}
+
+@media (min-width: 42rem) {
+  .hub-docs > h2 { margin-bottom: var(--s-4); }
+  .docs { gap: var(--s-4); }
+  .hub .docs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.doc-card {
+  margin: 0;
+  border-radius: var(--r-md);
+  background: var(--card);
+  border: 1px solid var(--line-hex);
+  border-color: var(--line);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  overflow: clip;
+  transition: border-color var(--m-out) var(--m-ease), box-shadow 180ms var(--m-ease), transform 180ms var(--m-ease);
+}
+
+.doc-card a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: 52px;
+  padding: 0.75rem var(--s-5);
+  color: var(--ink);
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--m-out) var(--m-ease), color var(--m-out) var(--m-ease);
+}
+
+.doc-card a + a {
+  border-top: 1px solid var(--line-hex);
+  border-top-color: var(--line);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.doc-card a:is(:hover, :focus-visible) {
+  background: color-mix(in oklab, var(--surface) 65%, transparent);
+  color: var(--accent);
+}
+
+.doc-card a:focus-visible {
+  outline-offset: -2px;
+}
+
+/* 404 Page layout */
+.not-found-box {
+  max-width: 40rem;
+}
+.not-found-desc {
+  margin-top: var(--s-3);
+  margin-bottom: var(--s-6);
+}
+.not-found .docs {
+  max-width: 34rem;
+}
+
+/* --------------------------------------------------------------------------
+   Hover & Pointer Micro-Animations (gated to fine pointers per motion.md)
+   -------------------------------------------------------------------------- */
+
+@media (hover: hover) and (pointer: fine) {
+  /* Linked game card lifts 2px, deepens border, softens shadow, zooms icon 1.03 */
+  .games .game:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong-hex);
+    border-color: var(--line-strong);
+    box-shadow:
+      inset 0 1px 0 var(--card-hi),
+      0 14px 30px -18px rgb(0 0 0 / .22);
+  }
+  .games .game:active {
+    transform: translateY(0) scale(.995);
+    transition-duration: var(--m-press);
+  }
+  .games .game:hover .game-stage img {
+    transform: scale(1.04);
+  }
+
+  /* Doc card subtle hover */
+  .doc-card:hover {
+    border-color: var(--line-strong-hex);
+    border-color: var(--line-strong);
+    box-shadow:
+      inset 0 1px 0 var(--card-hi),
+      0 10px 24px -18px rgb(0 0 0 / .18);
+  }
+
+  /* Buttons & language pill step 1px up on hover, sink & scale .985 on press */
+  :is(.btn, .btn-lang):hover {
+    transform: translateY(-1px);
+    transition-duration: var(--m-in);
+  }
+  .btn--primary:hover {
+    background: color-mix(in oklab, var(--action) 86%, var(--ink));
+  }
+  :is(.btn--secondary, .btn-lang):hover {
+    background: var(--surface);
+    border-color: color-mix(in oklab, var(--ink) 30%, transparent);
+  }
+  :is(.btn, .btn-lang):active {
+    transform: translateY(1px) scale(.985);
+    transition-duration: var(--m-press);
+  }
+
+  /* Brand breadcrumb subtle opacity/color response */
+  .crumb-brand:hover { color: var(--accent); }
+}
+
+/* Arrow stem & head nudge on any hovered/focused parent interactive element */
+:is(.games .game:hover, .games .game:focus-within, a:hover, a:focus-visible, .btn:hover, .btn:focus-visible) .m-arrow .m-arrow__stem {
+  opacity: 1;
+  transform: none;
+  transition-duration: var(--m-in);
+}
+:is(.games .game:hover, .games .game:focus-within, a:hover, a:focus-visible, .btn:hover, .btn:focus-visible) .m-arrow .m-arrow__head {
+  transform: translateX(3px);
+  transition-duration: var(--m-in);
+}
+
+/* --------------------------------------------------------------------------
+   Policy & Legal Document Reader (.doc)
+   -------------------------------------------------------------------------- */
+
+.doc article {
+  padding-top: var(--s-6);
+  max-width: var(--measure);
+}
+
+.doc article > .meta {
+  margin-top: var(--s-2);
+  margin-bottom: var(--s-5);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--line-hex);
+  border-bottom-color: var(--line);
+}
+
+/* Highlight Key Summary (#summary + ul) as a calm surface callout for players & Play reviewers */
+.doc #summary {
+  margin-top: var(--s-6);
+  margin-bottom: var(--s-3);
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.doc #summary + ul {
+  margin: 0 0 var(--s-6);
+  padding: var(--s-4) var(--s-5) var(--s-4) 2.25rem;
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line-hex);
+  border-color: var(--line);
+}
+
+.doc #summary + ul li + li {
+  margin-top: 0.45rem;
+}
+
+/* Mobile & Tablet Sticky Table of Contents (< 64rem) */
+.toc {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  margin-inline: calc(-1 * var(--gut));
+  padding-inline: var(--gut);
+  border-bottom: 1px solid var(--line-hex);
+  border-bottom-color: var(--line);
+  background: var(--bg);
+}
+
+.toc summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  padding-block: 0.55rem;
+  font: 500 0.9375rem/1.4 var(--font-text);
+  cursor: pointer;
+  list-style: none;
+}
+.toc summary::-webkit-details-marker { display: none; }
+.toc summary::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-right: 1.6px solid var(--muted);
+  border-bottom: 1.6px solid var(--muted);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--m-out) var(--m-ease);
+}
+.toc[open] summary::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.toc ul {
+  position: absolute;
+  inset: 100% 0 auto;
+  max-height: calc(100dvh - 4rem);
+  margin: 0;
+  padding: var(--s-2) var(--gut) var(--s-4);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-bottom: 1px solid var(--line-strong-hex);
+  border-bottom-color: var(--line-strong);
+  background: var(--card);
+  box-shadow: 0 16px 32px -16px rgb(0 0 0 / .2);
+  list-style: none;
+}
+
+.toc li + li { margin-top: 0; }
+
+.toc a {
+  display: block;
+  padding-block: 0.55rem;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  text-decoration: none;
+  border-radius: 6px;
+}
+.toc a:hover { color: var(--accent); }
+
+/* Narrowest phones (<356px): shorten breadcrumb trail cleanly while footer still links home */
+@media (max-width: 22.25rem) {
   .crumb-home { display: none; }
 }
 
-@media (min-width: 30rem) {
-  .game { gap: 1rem; }
-  .game > div { display: block; }
-  .game > div > p:first-of-type { margin-top: .25rem; }
+/* Desktop Policy Layout (>= 64rem, synced with toc.js matchMedia) */
+@media screen and (min-width: 64rem) {
+  .doc main {
+    display: grid;
+    grid-template-columns: var(--rail) minmax(0, var(--measure));
+    column-gap: var(--rail-gap);
+    align-items: start;
+    justify-content: space-between;
+  }
+
+  .doc article { padding-top: var(--s-7); }
+  .doc h2 { scroll-margin-top: 1.75rem; }
+
+  .toc {
+    top: 2rem;
+    max-height: calc(100dvh - 4rem);
+    margin: var(--s-7) 0 0;
+    padding: 0 var(--s-4) 0 0;
+    overflow-y: auto;
+    border-bottom: 0;
+    border-right: 1px solid var(--line-hex);
+    border-right-color: var(--line);
+    background: transparent;
+    font-size: 0.9rem;
+  }
+
+  .toc summary,
+  .toc[open] summary {
+    min-height: 0;
+    padding: 0 0 var(--s-3);
+    color: var(--muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: default;
+  }
+  .toc summary::after { display: none; }
+
+  .toc ul {
+    position: static;
+    max-height: none;
+    padding: 0;
+    overflow: visible;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .toc a {
+    padding: 0.35rem 0.5rem;
+    margin-inline: -0.5rem;
+    line-height: 1.48;
+    color: var(--muted);
+    transition: color var(--m-out) var(--m-ease), background-color var(--m-out) var(--m-ease);
+  }
+
+  .toc a:is(:hover, :focus-visible) {
+    color: var(--ink);
+    background: var(--surface);
+  }
 }
 
-/* Desktop: one shared grid, a rail for identity or wayfinding beside the 36rem text column */
-@media screen and (min-width: 64rem) {
-  :root { --wide: calc(var(--rail) + var(--rail-gap) + var(--measure)); }
-  .game { --icon: 96px; }
-  :is(.hub, .doc) > :is(header, main, footer) { width: min(100%, calc(var(--wide) + 2 * var(--gutter))); }
-  .home, .hub { min-height: 100dvh; }
-  footer { margin-top: 0; }
+/* --------------------------------------------------------------------------
+   Reduced Motion & Print
+   -------------------------------------------------------------------------- */
 
-  /* Home: name on the left, games on the right, centered as a block, contact on the floor */
-  .home { display: grid; grid-template: ". ." 1fr "header main" auto ". ." 1fr "footer footer" auto / var(--rail) var(--measure); align-items: baseline; justify-content: center; column-gap: var(--rail-gap); }
-  .home > * { width: auto; margin: 0; padding-inline: 0; }
-  .home header { grid-area: header; }
-  .home main { grid-area: main; }
-  .home footer { grid-area: footer; }
-  .home h1 { margin-top: 0; font-size: 3.5rem; line-height: 1.15; }
-  .home header > p { margin-top: .5rem; }
-  .home header > p span { display: block; }
-  .home h2 { margin-top: 0; }
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible,
+  .games .card-link:focus-visible::after { animation: none; }
 
-  /* Game hub: the game in the rail, its documents in the column */
-  .hub { display: flex; flex-direction: column; }
-  .hub main { display: grid; grid-template-columns: var(--rail) var(--measure); grid-template-rows: auto 1fr; column-gap: var(--rail-gap); margin-block: auto; }
-  .hub .game { grid-row: 1 / -1; grid-template-columns: 1fr; margin-top: 0; }
-  .hub .game > div { margin-top: .25rem; }
-  .hub h2 { grid-column: 2; margin-top: 0; }
-  .hub .docs { grid-column: 2; }
-  .hub .docs li { border-top: 1px solid var(--line); padding-block: .5rem; }
-
-  /* Policy pages: contents stay in view beside the text */
-  .doc main { display: grid; grid-template-columns: var(--rail) var(--measure); column-gap: var(--rail-gap); align-items: start; }
-  .doc h2 { scroll-margin-top: 1.5rem; }
-  .toc { top: 1.5rem; max-height: calc(100dvh - 3rem); margin: 1.5rem 0 0; padding: 0; overflow-y: auto; border: 0; font-size: .95rem; }
-  .toc[open] summary { padding-block: 0 .4rem; color: var(--muted); list-style: none; cursor: default; }
-  .toc ul { position: static; max-height: none; padding: 0; overflow: visible; border: 0; }
-  .toc a { padding-block: .3rem; line-height: 1.5; color: var(--fg); text-decoration: none; }
-  .toc a:hover { color: var(--link); text-decoration: underline; }
+  .game, .game-stage img, .doc-card, .doc-card a,
+  .btn, .btn-lang, .m-arrow__stem, .m-arrow__head,
+  .toc summary::after, .toc a, .links a,
+  article a, footer a, .crumbs a, .meta a { transition: none; }
+  .games .game:hover,
+  .games .game:active,
+  .games .game:hover .game-stage img,
+  :is(.btn, .btn-lang):hover,
+  :is(.btn, .btn-lang):active {
+    transform: none !important;
+  }
 }
 
 @media print {
-  :root { color-scheme: light; --fg: #000; --bg: #fff; --muted: #444; --link: #000; }
-  header nav, .toc, .skip, footer { display: none; }
+  :root {
+    color-scheme: light;
+    --bg: #fff;
+    --surface: #f6f6f6;
+    --card: #fff;
+    --ink: #000;
+    --muted: #444;
+    --accent: #000;
+    --line: #ccc;
+  }
+  body::before, header nav, .toc, .skip, footer { display: none !important; }
+  body > * { width: 100%; padding: 0; }
+  .doc article { max-width: none; padding-top: 0; }
 }
+
+/* Release state belongs to the game, independently of its platform. */
+.release-status {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+/* Long contact addresses remain readable at narrow widths and enlarged text. */
+a[href^="mailto:"] { overflow-wrap: anywhere; }
