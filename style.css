@@ -1,7 +1,7 @@
 :root {
   color-scheme: light dark;
   --fg: #222; --bg: #fdfcf9; --muted: #666; --link: #8a3b12; --line: #e4dfd4; --select: #f3d9c7;
-  --measure: 36rem; --gutter: 16px;
+  --measure: 36rem; --rail: 17rem; --rail-gap: 3rem; --gutter: 16px;
 }
 @media (prefers-color-scheme: dark) {
   :root { --fg: #e8e6e1; --bg: #1b1a18; --muted: #a09d97; --link: #f0a070; --line: #3a3733; --select: #5a3a26; }
@@ -16,8 +16,8 @@ a { color: var(--link); text-underline-offset: .18em; }
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 2px; }
 
-h1 { margin: 1.5rem 0 .25rem; font-size: 2.125rem; line-height: 1.3; text-wrap: balance; }
-h2 { margin: 2.75rem 0 .5rem; font-size: 1.4rem; line-height: 1.4; scroll-margin-top: 1rem; }
+h1 { margin: 1.5rem 0 .25rem; font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.125rem); line-height: 1.3; text-wrap: balance; }
+h2 { margin: 2.75rem 0 .5rem; font-size: 1.4rem; line-height: 1.4; scroll-margin-top: 4rem; } /* clears the sticky contents bar */
 h3 { font-size: 1.2rem; line-height: 1.4; }
 code { overflow-wrap: anywhere; }
 .meta { margin-top: 0; color: var(--muted); font-size: .9rem; }
@@ -34,11 +34,15 @@ footer > * { margin: 0; padding-top: 1rem; border-top: 1px solid var(--line); }
 
 /* Game row: on the home page the whole row is one link */
 .games { margin: 0; padding: 0; list-style: none; }
-.game { position: relative; display: grid; grid-template-columns: 64px 1fr; gap: 1rem; }
+.game { --icon: 64px; position: relative; display: grid; grid-template-columns: var(--icon) 1fr; gap: 0 1rem; }
 .games .game { padding-block: 1.25rem; border-top: 1px solid var(--line); }
-.game img { display: block; width: 64px; height: 64px; border-radius: 14px; }
-.game h1, .game h3 { margin: 0; }
+.game img { display: block; width: var(--icon); height: var(--icon); border-radius: 22%; }
+.game h1, .game h3 { margin: 0; align-self: center; }
 .game p { margin: .25rem 0 0; }
+/* Phones: icon and name share a row, the text gets the full width below */
+.game > div { display: contents; }
+.game > div > p { grid-column: 1 / -1; }
+.game > div > p:first-of-type { margin-top: .75rem; }
 main > .game { margin-top: 2rem; }
 .games a::after { content: ""; position: absolute; inset: 0; }
 .games .game:hover a { text-decoration-thickness: 2px; }
@@ -48,13 +52,65 @@ main > .game { margin-top: 2rem; }
 .docs { margin: 0; padding: 0; list-style: none; }
 .docs a { display: inline-block; padding-block: .5rem; }
 
-/* Table of contents on policy pages */
-.toc { margin-top: 2rem; border-block: 1px solid var(--line); }
+/* Contents on policy pages: a sticky bar on phones, its list opens over the text so the page doesn't jump */
+.toc { position: sticky; top: 0; z-index: 1; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); border-bottom: 1px solid var(--line); background: var(--bg); }
 .toc summary { padding-block: .6rem; font-weight: 600; cursor: pointer; }
-.toc ul { margin: 0 0 .5rem; padding: 0; list-style: none; }
+.toc ul { position: absolute; inset: 100% 0 auto; max-height: calc(100dvh - 4rem); margin: 0; padding: 0 var(--gutter) .5rem; overflow-y: auto; overscroll-behavior: contain; border-bottom: 1px solid var(--line); background: var(--bg); list-style: none; }
 .toc a { display: block; padding-block: .5rem; }
+
+.skip { position: absolute; top: .5rem; left: var(--gutter); z-index: 2; width: auto; margin: 0; padding: .6rem 1rem; background: var(--bg); transform: translateY(-200%); }
+.skip:focus { transform: none; }
+
+/* The narrowest phones can't fit the whole trail beside the language link; the footer still links home */
+@media (max-width: 24rem) {
+  .crumb-home { display: none; }
+}
+
+@media (min-width: 30rem) {
+  .game { gap: 1rem; }
+  .game > div { display: block; }
+  .game > div > p:first-of-type { margin-top: .25rem; }
+}
+
+/* Desktop: one shared grid, a rail for identity or wayfinding beside the 36rem text column */
+@media screen and (min-width: 64rem) {
+  :root { --wide: calc(var(--rail) + var(--rail-gap) + var(--measure)); }
+  .game { --icon: 96px; }
+  :is(.hub, .doc) > :is(header, main, footer) { width: min(100%, calc(var(--wide) + 2 * var(--gutter))); }
+  .home, .hub { min-height: 100dvh; }
+  footer { margin-top: 0; }
+
+  /* Home: name on the left, games on the right, centered as a block, contact on the floor */
+  .home { display: grid; grid-template: ". ." 1fr "header main" auto ". ." 1fr "footer footer" auto / var(--rail) var(--measure); align-items: baseline; justify-content: center; column-gap: var(--rail-gap); }
+  .home > * { width: auto; margin: 0; padding-inline: 0; }
+  .home header { grid-area: header; }
+  .home main { grid-area: main; }
+  .home footer { grid-area: footer; }
+  .home h1 { margin-top: 0; font-size: 3.5rem; line-height: 1.15; }
+  .home header > p { margin-top: .5rem; }
+  .home header > p span { display: block; }
+  .home h2 { margin-top: 0; }
+
+  /* Game hub: the game in the rail, its documents in the column */
+  .hub { display: flex; flex-direction: column; }
+  .hub main { display: grid; grid-template-columns: var(--rail) var(--measure); grid-template-rows: auto 1fr; column-gap: var(--rail-gap); margin-block: auto; }
+  .hub .game { grid-row: 1 / -1; grid-template-columns: 1fr; margin-top: 0; }
+  .hub .game > div { margin-top: .25rem; }
+  .hub h2 { grid-column: 2; margin-top: 0; }
+  .hub .docs { grid-column: 2; }
+  .hub .docs li { border-top: 1px solid var(--line); padding-block: .5rem; }
+
+  /* Policy pages: contents stay in view beside the text */
+  .doc main { display: grid; grid-template-columns: var(--rail) var(--measure); column-gap: var(--rail-gap); align-items: start; }
+  .doc h2 { scroll-margin-top: 1.5rem; }
+  .toc { top: 1.5rem; max-height: calc(100dvh - 3rem); margin: 1.5rem 0 0; padding: 0; overflow-y: auto; border: 0; font-size: .95rem; }
+  .toc[open] summary { padding-block: 0 .4rem; color: var(--muted); list-style: none; cursor: default; }
+  .toc ul { position: static; max-height: none; padding: 0; overflow: visible; border: 0; }
+  .toc a { padding-block: .3rem; line-height: 1.5; color: var(--fg); text-decoration: none; }
+  .toc a:hover { color: var(--link); text-decoration: underline; }
+}
 
 @media print {
   :root { color-scheme: light; --fg: #000; --bg: #fff; --muted: #444; --link: #000; }
-  header nav, .toc, footer { display: none; }
+  header nav, .toc, .skip, footer { display: none; }
 }
