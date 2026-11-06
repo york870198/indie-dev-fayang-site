@@ -1,6 +1,7 @@
 # Local tool output: this repo is public
 .impeccable/
 .claude/
+.agents/
 
 # OS files
 .DS_Store
