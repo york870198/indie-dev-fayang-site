@@ -2,6 +2,8 @@
 .impeccable/
 .claude/
 .agents/
+.taste-skill/
+shots/
 
 # OS files
 .DS_Store

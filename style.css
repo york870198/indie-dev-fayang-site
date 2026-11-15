@@ -1103,3 +1103,395 @@ footer > * {
 
 /* Long contact addresses remain readable at narrow widths and enlarged text. */
 a[href^="mailto:"] { overflow-wrap: anywhere; }
+
+/* ==========================================================================
+   Google Play Closed Testing Subpage (.testing-page)
+   ========================================================================== */
+
+.testing-page main {
+  padding-top: clamp(1.5rem, 4vh, 3rem);
+}
+
+/* Hero Section */
+.testing-hero {
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+.testing-hero-badge-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-bottom: var(--s-3);
+}
+
+.testing-hero h1 {
+  font-size: clamp(2rem, 1.6rem + 1.6vw, 2.85rem);
+  line-height: 1.15;
+  margin-bottom: var(--s-3);
+}
+
+.testing-hero .lead {
+  max-width: 58ch;
+  margin-bottom: var(--s-5);
+}
+
+/* Testing Key Metrics Strip */
+.testing-meta-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-3);
+  margin-top: var(--s-5);
+  margin-bottom: var(--s-5);
+}
+
+@media (min-width: 48rem) {
+  .testing-meta-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--s-4);
+  }
+}
+
+.meta-item {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+
+.meta-item-label {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 2px;
+}
+
+.meta-item-value {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--ink);
+  line-height: 1.3;
+}
+
+/* Feature Highlights Grid */
+.testing-features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  margin-top: var(--s-4);
+}
+
+@media (min-width: 48rem) {
+  .testing-features {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.feature-card {
+  padding: var(--s-5);
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  margin-bottom: var(--s-4);
+  color: var(--accent);
+}
+
+.feature-card h3 {
+  font-size: 1.15rem;
+  margin-bottom: var(--s-2);
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Screenshots Showcase */
+.screenshots-section {
+  margin-top: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.screenshots-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-5);
+  margin-top: var(--s-4);
+}
+
+@media (min-width: 36rem) and (max-width: 53.99rem) {
+  .screenshots-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .screenshots-grid > .screenshot-card:nth-child(3) {
+    grid-column: 1 / -1;
+    max-width: 340px;
+    margin-inline: auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 54rem) {
+  .screenshots-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.screenshot-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  transition: transform 180ms var(--m-ease), border-color var(--m-out) var(--m-ease), box-shadow 180ms var(--m-ease);
+}
+
+.screenshot-frame {
+  width: 100%;
+  aspect-ratio: 9 / 19.5;
+  border-radius: var(--r-md);
+  overflow: clip;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: 0 4px 14px -6px rgb(0 0 0 / .14);
+}
+
+.screenshot-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--m-image) var(--m-ease);
+}
+
+.screenshot-info {
+  padding: 0 0 var(--s-3);
+}
+
+.screenshot-info h3 {
+  font-size: 1.05rem;
+  margin-bottom: var(--s-1);
+}
+
+.screenshot-info p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .screenshot-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow:
+      inset 0 1px 0 var(--card-hi),
+      0 12px 28px -14px rgb(0 0 0 / .2);
+  }
+  .screenshot-card:hover .screenshot-frame img {
+    transform: scale(1.025);
+  }
+}
+
+/* Steps Section */
+.steps-section {
+  margin-top: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.test-steps {
+  margin: var(--s-4) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-5);
+}
+
+.step-card {
+  position: relative;
+  border-radius: var(--r-lg);
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  padding: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  transition: transform 180ms var(--m-ease), border-color var(--m-out) var(--m-ease), box-shadow 180ms var(--m-ease);
+}
+
+@media (min-width: 48rem) {
+  .step-card {
+    padding: var(--s-6);
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  margin-bottom: var(--s-3);
+}
+
+.step-number {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  color: var(--accent);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.05rem;
+  display: grid;
+  place-items: center;
+}
+
+.step-header h3 {
+  font-size: clamp(1.2rem, 1.1rem + 0.35vw, 1.45rem);
+  margin: 0;
+}
+
+.step-desc {
+  font-size: 1rem;
+  line-height: 1.68;
+  color: var(--ink);
+  margin-bottom: var(--s-4);
+  max-width: 62ch;
+}
+
+/* Step Callout / Alert */
+.step-callout {
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  margin-bottom: var(--s-5);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+.step-callout p {
+  margin: 0;
+}
+
+.step-callout p + p {
+  margin-top: 0.25rem;
+}
+
+.step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: auto;
+}
+
+@media (max-width: 29.99rem) {
+  .step-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .step-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--line-strong);
+    box-shadow:
+      inset 0 1px 0 var(--card-hi),
+      0 12px 28px -14px rgb(0 0 0 / .18);
+  }
+}
+
+/* FAQ Collapsible Cards */
+.faq-section {
+  margin-top: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.faq-card {
+  border-radius: var(--r-md);
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: inset 0 1px 0 var(--card-hi);
+  overflow: clip;
+}
+
+.faq-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  min-height: 52px;
+  padding: 0.85rem var(--s-5);
+  font: 500 1rem/1.4 var(--font-text);
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  transition: background-color var(--m-out) var(--m-ease), color var(--m-out) var(--m-ease);
+}
+
+.faq-summary::-webkit-details-marker { display: none; }
+
+.faq-summary::after {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-right: 1.8px solid var(--muted);
+  border-bottom: 1.8px solid var(--muted);
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--m-out) var(--m-ease);
+}
+
+.faq-card[open] .faq-summary::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+
+.faq-summary:is(:hover, :focus-visible) {
+  background: color-mix(in oklab, var(--surface) 50%, transparent);
+  color: var(--accent);
+}
+
+.faq-content {
+  padding: var(--s-4) var(--s-5) var(--s-5);
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.68;
+}
+
+.faq-content p {
+  margin: 0;
+}
+
+.faq-content p + p {
+  margin-top: 0.5rem;
+}
