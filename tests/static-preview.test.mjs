@@ -132,7 +132,7 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
       assert.equal((await page.goto(`${origin}${path}`)).status(), status, path)
       assert.equal((await page.reload()).status(), status, path)
       assert.deepEqual(await layout(), expectedLayout, `${path} at ${width}px`)
-      for (const image of await page.locator('main img').all()) {
+      for (const image of await page.locator('main img:visible').all()) {
         await image.scrollIntoViewIfNeeded()
         await image.evaluate(node => node.decode())
         assert.ok(await image.evaluate(node => node.complete && node.naturalWidth > 0), path)
@@ -179,6 +179,10 @@ test('desktop recruitment keeps keyboard, screenshot and motion behavior after n
   assert.notEqual(await help.getAttribute('open'), null)
 
   const screenshot = page.locator('details.game-preview a.m-zoom').first()
+  const preview = page.locator('details.game-preview')
+  assert.equal(await preview.getAttribute('open'), null)
+  await preview.locator('summary').press('Enter')
+  assert.notEqual(await preview.getAttribute('open'), null)
   const image = screenshot.locator('img')
   await screenshot.hover()
   await image.evaluate(node => Promise.all(node.getAnimations().map(animation => animation.finished)))
@@ -204,9 +208,9 @@ test('touch recruitment keeps the anchor, disclosures and screenshot link withou
   assert.notEqual(await help.getAttribute('open'), null)
 
   const preview = page.locator('details.game-preview')
-  await preview.locator('summary').tap()
   assert.equal(await preview.getAttribute('open'), null)
   await preview.locator('summary').tap()
+  assert.notEqual(await preview.getAttribute('open'), null)
   const screenshot = preview.locator('a.m-zoom').last()
   assert.equal(await screenshot.locator('img').evaluate(node => getComputedStyle(node).transform), 'none')
   const [popup] = await Promise.all([page.waitForEvent('popup'), screenshot.tap()])
