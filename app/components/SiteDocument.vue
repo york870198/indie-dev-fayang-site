@@ -5,7 +5,8 @@ const { source } = defineProps({
   source: { type: String, required: true },
 })
 
-// The branch-published HTML remains the source for legal copy during the migration.
+// The branch-published HTML remains the content source during the migration.
+// This layout supports a text skip link, header, main and footer, with scripts in the head.
 const document = parse(source, { sourceCodeLocationInfo: true })
 const element = (parent, tag) => parent.childNodes.find(node => node.tagName === tag)
 const attributes = node => Object.fromEntries(node.attrs.map(({ name, value }) => [name, value]))
@@ -18,6 +19,9 @@ const html = element(document, 'html')
 const head = element(html, 'head')
 const body = element(html, 'body')
 const skip = element(body, 'a')
+const header = element(body, 'header')
+const main = element(body, 'main')
+const footer = element(body, 'footer')
 
 useHead({
   htmlAttrs: attributes(html),
@@ -31,7 +35,7 @@ useHead({
 
 <template>
   <a v-bind="attributes(skip)">{{ skip.childNodes[0].value }}</a>
-  <header v-html="contents(element(body, 'header'))" />
-  <main v-html="contents(element(body, 'main'))" />
-  <footer v-html="contents(element(body, 'footer'))" />
+  <header v-bind="attributes(header)" v-html="contents(header)" />
+  <main v-bind="attributes(main)" v-html="contents(main)" />
+  <footer v-bind="attributes(footer)" v-html="contents(footer)" />
 </template>

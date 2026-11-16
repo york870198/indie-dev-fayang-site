@@ -13,9 +13,11 @@ https://indie-dev-fayang.com/
 ```sh
 npm ci
 npm run generate
-python -m http.server 8000 --directory .output/public
+npm run preview
 ```
 
-純靜態預覽沿用 `/mountaindog/privacy.html` 與 `/mountaindog/privacy-en.html`。Nuxt 使用既有 HTML 作為政策內容來源，將兩頁分別產生為 `.output/public/mountaindog/privacy.html` 與 `.output/public/mountaindog/privacy-en.html`。建置完成後會將其餘頁面、資源和根目錄 `app-ads.txt` 複製到原有位置。
+本機預覽位於 `http://127.0.0.1:8000`，直接提供 `.output/public` 的檔案。首頁和遊戲主頁各自產生 `index.html`，所以目錄網址和同名 `.html` 網址都能直接開啟。預覽會將 `/mountaindog` 導向 `/mountaindog/`，並用生成的 `404.html` 回應未知網址，狀態碼為 `404`。
+
+Nuxt 使用既有 HTML 作為首頁、遊戲主頁、自訂錯誤頁及中英文隱私權政策的內容來源。政策頁維持 `/mountaindog/privacy.html` 與 `/mountaindog/privacy-en.html`。建置完成後會將其餘頁面、資源和根目錄 `app-ads.txt` 複製到原有位置。
 
 建置後執行 `npx playwright install --only-shell chromium` 和 `npm test`，可檢查靜態 HTTP 回應、政策正文和瀏覽器操作。PR 的 **Nuxt static preview** 工作流程通過檢查後會提供 `nuxt-static-preview` 下載檔。解壓後可直接將其根目錄指定給靜態伺服器。

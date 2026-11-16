@@ -8,6 +8,7 @@
   },
   "scripts": {
     "generate": "nuxt generate && node scripts/copy-preview-files.mjs",
+    "preview": "node scripts/preview.mjs",
     "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
