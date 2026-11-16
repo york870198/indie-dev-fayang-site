@@ -140,7 +140,8 @@ body:not(.doc)::before {
 }
 
 /* Equal left and right content edges across all pages */
-body > :is(header, main, footer) {
+body > :is(header, main, footer),
+body > :where(#__nuxt) > :is(header, main, footer) {
   width: min(100%, calc(var(--wrap) + 2 * var(--gut)));
   margin-inline: auto;
   padding-inline: var(--gut);
@@ -1089,7 +1090,7 @@ footer > * {
     --line: #ccc;
   }
   body::before, header nav, .toc, .skip, footer { display: none !important; }
-  body > * { width: 100%; padding: 0; }
+  body > *, body > :where(#__nuxt) > * { width: 100%; padding: 0; }
   .doc article { max-width: none; padding-top: 0; }
 }
 

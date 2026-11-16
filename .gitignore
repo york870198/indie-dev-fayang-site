@@ -9,3 +9,9 @@ shots/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Nuxt build output
+.nuxt/
+.output/
+dist/
+node_modules/
