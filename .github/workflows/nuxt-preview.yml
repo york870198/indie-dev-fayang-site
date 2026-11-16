@@ -1,30 +1,110 @@
-name: Nuxt static preview
+name: Nuxt static preview and Pages release
 
 on:
   pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: Publish the Nuxt build or restore the verified legacy site
+        type: choice
+        options:
+          - release
+          - rollback
+        default: release
 
 permissions:
   contents: read
 
+concurrency:
+  group: nuxt-pages-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   preview:
+    if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: ${{ inputs.mode == 'rollback' && '0' || '1' }}
+          persist-credentials: false
       - uses: actions/setup-node@v6
+        if: inputs.mode != 'rollback'
         with:
           node-version-file: .node-version
           cache: npm
       - name: Install pinned npm
+        if: inputs.mode != 'rollback'
         run: |
           npm_version=$(node -p 'require("./package.json").engines.npm')
           npm install --global "npm@$npm_version"
       - run: npm ci
+        if: inputs.mode != 'rollback'
       - run: npm run generate
+        if: inputs.mode != 'rollback'
       - run: npx playwright install --with-deps --only-shell chromium
+        if: inputs.mode != 'rollback'
       - run: npm test
+        if: inputs.mode != 'rollback'
       - uses: actions/upload-artifact@v7
+        if: github.event_name == 'pull_request'
         with:
           name: nuxt-static-preview
           path: .output/public/
           if-no-files-found: error
+      - name: Prepare verified legacy site
+        if: inputs.mode == 'rollback'
+        shell: bash
+        run: |
+          mkdir rollback-site
+          git archive e3a6244153cdd74012ce59cd45cbd62c51d97cce -- index.html 404.html app-ads.txt favicon.svg style.css toc.js mountaindog | tar -x -C rollback-site
+      - uses: actions/upload-pages-artifact@v4
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        with:
+          path: ${{ inputs.mode == 'rollback' && 'rollback-site' || '.output/public' }}
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: preview
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/download-artifact@v8
+        with:
+          name: github-pages
+          path: pages-artifact
+      - name: Extract expected files for public verification
+        run: |
+          mkdir expected-site
+          tar -xf pages-artifact/artifact.tar -C expected-site
+      - uses: actions/configure-pages@v5
+      - name: Confirm the release is still current
+        if: inputs.mode != 'rollback'
+        shell: bash
+        run: |
+          main_sha=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [ "$GITHUB_SHA" != "$main_sha" ]; then
+            echo 'This run is no longer the current main commit. Start a fresh release from main.'
+            exit 1
+          fi
+      - uses: actions/deploy-pages@v4
+        id: deployment
+      - name: Verify public site
+        shell: bash
+        run: |
+          for attempt in {1..12}; do
+            if python scripts/verify-pages.py expected-site; then exit 0; fi
+            if [ "$attempt" -lt 12 ]; then sleep 10; fi
+          done
+          exit 1
