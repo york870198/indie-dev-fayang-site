@@ -13,6 +13,8 @@ export default defineNuxtConfig({
     '/404.html': { noScripts: true },
     '/mountaindog/privacy.html': { prerender: true, noScripts: true },
     '/mountaindog/privacy-en.html': { prerender: true, noScripts: true },
+    '/mountaindog/terms.html': { prerender: true, noScripts: true },
+    '/mountaindog/terms-en.html': { prerender: true, noScripts: true },
   },
   nitro: {
     prerender: {

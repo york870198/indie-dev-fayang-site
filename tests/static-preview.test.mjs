@@ -6,7 +6,13 @@ import { chromium } from 'playwright'
 import { test } from 'node:test'
 import { createPreviewServer } from '../scripts/preview.mjs'
 
-const policyPaths = ['mountaindog/privacy.html', 'mountaindog/privacy-en.html']
+const legalPages = [
+  { path: 'mountaindog/privacy.html', alternate: 'mountaindog/privacy-en.html', anchor: 'ads' },
+  { path: 'mountaindog/privacy-en.html', alternate: 'mountaindog/privacy.html', anchor: 'ads' },
+  { path: 'mountaindog/terms.html', alternate: 'mountaindog/terms-en.html', anchor: 'license', policy: 'mountaindog/privacy.html' },
+  { path: 'mountaindog/terms-en.html', alternate: 'mountaindog/terms.html', anchor: 'license', policy: 'mountaindog/privacy-en.html' },
+]
+const termsPages = legalPages.filter(page => page.policy)
 const navigationPages = [
   { path: '/', source: 'index.html', status: 200 },
   { path: '/index.html', source: 'index.html', status: 200 },
@@ -64,7 +70,7 @@ async function assertOriginalDocument(path, source, status) {
   assert.deepEqual(documentParts(await response.text()), documentParts(original), path)
 }
 
-for (const path of policyPaths) {
+for (const { path } of legalPages) {
   test(`${path} has the full original document in the static build`, () =>
     assertOriginalDocument(`/${path}`, path, 200))
 }
@@ -77,11 +83,9 @@ test('app-ads.txt returns the original bytes as plain text', async () => {
 })
 
 test('existing navigation destinations are reachable in the preview', async () => {
-  for (const path of ['/mountaindog/terms.html', '/mountaindog/terms-en.html', '/mountaindog/testing.html']) {
-    const response = await fetch(`${origin}${path}`)
-    assert.equal(response.status, 200, path)
-    await response.body.cancel()
-  }
+  const response = await fetch(`${origin}/mountaindog/testing.html`)
+  assert.equal(response.status, 200)
+  await response.body.cancel()
 })
 
 test('the game directory redirects to its canonical path', async () => {
@@ -97,7 +101,7 @@ test('home, game and error pages keep the original documents and HTTP status', a
   }
 })
 
-test('home, game and error pages keep their layout and navigation without JavaScript', async t => {
+test('navigation and terms pages keep their layout and skip links without JavaScript', async t => {
   const baseline = createPreviewServer('.')
   baseline.listen(0, '127.0.0.1')
   await once(baseline, 'listening')
@@ -109,9 +113,10 @@ test('home, game and error pages keep their layout and navigation without JavaSc
   for (const width of [390, 1440]) {
     const page = await browser.newPage({ viewport: { width, height: 800 }, javaScriptEnabled: false })
     await page.route('https://**/*', route => route.abort())
-    for (const { path, status } of navigationPages) {
+    const pages = [...navigationPages, ...termsPages.map(({ path }) => ({ path: `/${path}`, status: 200 }))]
+    for (const { path, status } of pages) {
       await page.goto(`${baselineOrigin}${path}`)
-      const layout = () => page.locator('header, main, footer, .game, .not-found-box').evaluateAll(nodes =>
+      const layout = () => page.locator('header, main, footer, .game, .not-found-box, article, .toc').evaluateAll(nodes =>
         nodes.map(node => node.getBoundingClientRect().toJSON()))
       const expectedLayout = await layout()
 
@@ -140,7 +145,7 @@ test('home, game and error pages keep their layout and navigation without JavaSc
   }
 })
 
-test('policies keep their deep links, language links and responsive table of contents', async t => {
+test('legal pages keep their deep links, language links and responsive table of contents', async t => {
   const browser = await chromium.launch()
   t.after(() => browser.close())
 
@@ -148,38 +153,54 @@ test('policies keep their deep links, language links and responsive table of con
     const page = await browser.newPage({ viewport: { width, height: 800 } })
     await page.route('https://**/*', route => route.abort())
     const toc = page.locator('details.toc')
-    for (const [index, path] of policyPaths.entries()) {
-      const url = `${origin}/${path}#ads`
+    for (const { path, anchor, alternate } of legalPages) {
+      const url = `${origin}/${path}#${anchor}`
       await page.goto('about:blank')
       assert.equal((await page.goto(url)).status(), 200)
       assert.equal((await page.reload()).status(), 200)
-      assert.equal(await page.locator(':target').getAttribute('id'), 'ads')
+      assert.equal(await page.locator(':target').getAttribute('id'), anchor)
       assert.equal(await toc.getAttribute('open') !== null, desktop)
-      if (!desktop) await toc.locator('summary').click()
+      await toc.locator('summary').click()
+      assert.notEqual(await toc.getAttribute('open'), null)
       await toc.locator('a[href="#contact"]').click()
       assert.equal(await page.locator(':target').getAttribute('id'), 'contact')
       assert.equal(await toc.getAttribute('open') !== null, desktop)
-      const alternate = `${origin}/${policyPaths[1 - index]}`
-      await Promise.all([page.waitForURL(alternate), page.locator('a.btn-lang').click()])
+      await Promise.all([page.waitForURL(`${origin}/${alternate}`), page.locator('a.btn-lang').click()])
     }
     await page.close()
   }
 })
 
-test('policies and their native table of contents work with JavaScript disabled', async t => {
+test('legal pages and their native table of contents work with JavaScript disabled', async t => {
   const browser = await chromium.launch()
   t.after(() => browser.close())
   const page = await browser.newPage({ javaScriptEnabled: false })
   await page.route('https://**/*', route => route.abort())
 
-  for (const path of policyPaths) {
+  for (const { path, anchor } of legalPages) {
     await page.goto(`${origin}/${path}`)
-    assert.ok(await page.locator('article #ads').isVisible())
+    assert.ok(await page.locator(`article #${anchor}`).isVisible())
     const toc = page.locator('details.toc')
     assert.equal(await toc.getAttribute('open'), null)
     await toc.locator('summary').press('Enter')
     assert.notEqual(await toc.getAttribute('open'), null)
-    await toc.locator('a[href="#ads"]').click()
-    assert.equal(await page.locator(':target').getAttribute('id'), 'ads')
+    await toc.locator(`a[href="#${anchor}"]`).press('Enter')
+    assert.equal(await page.locator(':target').getAttribute('id'), anchor)
+  }
+})
+
+test('terms and privacy policies link to one another in the same language', async t => {
+  const browser = await chromium.launch()
+  t.after(() => browser.close())
+  const page = await browser.newPage({ javaScriptEnabled: false })
+  await page.route('https://**/*', route => route.abort())
+
+  for (const { path, policy } of termsPages) {
+    const terms = `${origin}/${path}`
+    await page.goto(terms)
+    await page.locator('article .meta a').click()
+    assert.equal(page.url(), `${origin}/${policy}`)
+    await page.locator('article .meta a').click()
+    assert.equal(page.url(), terms)
   }
 })
