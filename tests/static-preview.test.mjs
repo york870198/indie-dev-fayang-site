@@ -13,11 +13,13 @@ const legalPages = [
   { path: 'mountaindog/terms-en.html', alternate: 'mountaindog/terms.html', anchor: 'license', policy: 'mountaindog/privacy-en.html' },
 ]
 const termsPages = legalPages.filter(page => page.policy)
+const testingPath = '/mountaindog/testing.html'
 const navigationPages = [
   { path: '/', source: 'index.html', status: 200 },
   { path: '/index.html', source: 'index.html', status: 200 },
   { path: '/mountaindog/', source: 'mountaindog/index.html', status: 200 },
   { path: '/mountaindog/index.html', source: 'mountaindog/index.html', status: 200 },
+  { path: testingPath, source: 'mountaindog/testing.html', status: 200 },
   { path: '/404.html', source: '404.html', status: 200 },
   { path: '/mountaindog/missing/page.html', source: '404.html', status: 404 },
 ]
@@ -50,10 +52,13 @@ function documentParts(html) {
   const attributes = node => Object.fromEntries(node.attrs.map(({ name, value }) => [name, value]))
 
   return {
-    lang: root.attrs.find(attr => attr.name === 'lang')?.value,
+    html: attributes(root),
     body: attributes(body),
     title: title?.childNodes[0]?.value,
     alternates: alternates.map(attributes),
+    scripts: [head, body].map(parent => parent.childNodes
+      .filter(node => node.tagName === 'script' && node.attrs.some(attr => attr.name === 'src'))
+      .map(attributes)),
     sections: ['a', 'header', 'main', 'footer'].map(tag => {
       const section = find(body, node => node.tagName === tag)
       const { startTag, endTag } = section.sourceCodeLocation
@@ -82,10 +87,14 @@ test('app-ads.txt returns the original bytes as plain text', async () => {
   assert.deepEqual(Buffer.from(await response.arrayBuffer()), await readFile('app-ads.txt'))
 })
 
-test('existing navigation destinations are reachable in the preview', async () => {
-  const response = await fetch(`${origin}/mountaindog/testing.html`)
-  assert.equal(response.status, 200)
-  await response.body.cancel()
+test('recruitment styles, motion script, icon and screenshots retain their original bytes', async () => {
+  const recruitmentAssets = ['testing.css', 'assets/motion/motion.css', 'assets/motion/motion.js', 'icon.png',
+    'screenshots/screen-1.jpg', 'screenshots/screen-2.jpg', 'screenshots/screen-3.jpg']
+  for (const path of ['style.css', 'favicon.svg', ...recruitmentAssets.map(asset => `mountaindog/${asset}`)]) {
+    const response = await fetch(`${origin}/${path}`)
+    assert.equal(response.status, 200, path)
+    assert.deepEqual(Buffer.from(await response.arrayBuffer()), await readFile(path), path)
+  }
 })
 
 test('the game directory redirects to its canonical path', async () => {
@@ -95,7 +104,7 @@ test('the game directory redirects to its canonical path', async () => {
   assert.equal(new URL(response.headers.get('location'), url).href, `${origin}/mountaindog/?ref=test`)
 })
 
-test('home, game and error pages keep the original documents and HTTP status', async () => {
+test('navigation pages keep the original documents and HTTP status', async () => {
   for (const { path, source, status } of navigationPages) {
     await assertOriginalDocument(path, source, status)
   }
@@ -116,7 +125,7 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
     const pages = [...navigationPages, ...termsPages.map(({ path }) => ({ path: `/${path}`, status: 200 }))]
     for (const { path, status } of pages) {
       await page.goto(`${baselineOrigin}${path}`)
-      const layout = () => page.locator('header, main, footer, .game, .not-found-box, article, .toc').evaluateAll(nodes =>
+      const layout = () => page.locator('header, main, footer, .game, .not-found-box, article, .toc, main > section').evaluateAll(nodes =>
         nodes.map(node => node.getBoundingClientRect().toJSON()))
       const expectedLayout = await layout()
 
@@ -124,9 +133,12 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
       assert.equal((await page.reload()).status(), status, path)
       assert.deepEqual(await layout(), expectedLayout, `${path} at ${width}px`)
       for (const image of await page.locator('main img').all()) {
+        await image.scrollIntoViewIfNeeded()
+        await image.evaluate(node => node.decode())
         assert.ok(await image.evaluate(node => node.complete && node.naturalWidth > 0), path)
       }
 
+      await page.evaluate(() => scrollTo(0, 0))
       await page.keyboard.press('Tab')
       assert.equal(await page.locator(':focus').getAttribute('href'), '#content')
       await page.keyboard.press('Enter')
@@ -143,6 +155,62 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
     assert.equal(page.url(), `${origin}/mountaindog/`)
     await page.close()
   }
+})
+
+test('desktop recruitment keeps keyboard, screenshot and motion behavior after navigation', async t => {
+  const browser = await chromium.launch()
+  t.after(() => browser.close())
+  const page = await browser.newPage({ viewport: { width: 1440, height: 800 } })
+  await page.route('https://**/*', route => route.abort())
+  const pageErrors = []
+  page.on('pageerror', error => pageErrors.push(error.message))
+  await page.goto(`${origin}/mountaindog/`)
+  const [motionResponse] = await Promise.all([
+    page.waitForResponse(`${origin}/mountaindog/assets/motion/motion.js`),
+    page.locator('main a[href="testing.html"]').first().click(),
+  ])
+  assert.equal(motionResponse.status(), 200)
+  await page.locator('header a[href="./"]').click()
+  await page.goBack()
+  assert.equal(page.url(), `${origin}${testingPath}`)
+
+  const help = page.locator('details.inline-help').first()
+  await help.locator('summary').press('Enter')
+  assert.notEqual(await help.getAttribute('open'), null)
+
+  const screenshot = page.locator('details.game-preview a.m-zoom').first()
+  const image = screenshot.locator('img')
+  await screenshot.hover()
+  await image.evaluate(node => Promise.all(node.getAnimations().map(animation => animation.finished)))
+  assert.notEqual(await image.evaluate(node => getComputedStyle(node).transform), 'none')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await image.evaluate(node => Promise.all(node.getAnimations().map(animation => animation.finished)))
+  assert.equal(await image.evaluate(node => getComputedStyle(node).transform), 'none')
+  const [popup] = await Promise.all([page.waitForEvent('popup'), screenshot.press('Enter')])
+  assert.equal(popup.url(), `${origin}/mountaindog/screenshots/screen-1.jpg`)
+  assert.deepEqual(pageErrors, [])
+})
+
+test('touch recruitment keeps the anchor, disclosures and screenshot link without JavaScript', async t => {
+  const browser = await chromium.launch()
+  t.after(() => browser.close())
+  const page = await browser.newPage({ viewport: { width: 390, height: 800 }, hasTouch: true, isMobile: true, javaScriptEnabled: false })
+  await page.route('https://**/*', route => route.abort())
+  await page.goto(`${origin}${testingPath}`)
+  await page.locator('header a[href="#steps"]').tap()
+  assert.equal(await page.locator(':target').getAttribute('id'), 'steps')
+  const help = page.locator('details.inline-help').first()
+  await help.locator('summary').tap()
+  assert.notEqual(await help.getAttribute('open'), null)
+
+  const preview = page.locator('details.game-preview')
+  await preview.locator('summary').tap()
+  assert.equal(await preview.getAttribute('open'), null)
+  await preview.locator('summary').tap()
+  const screenshot = preview.locator('a.m-zoom').last()
+  assert.equal(await screenshot.locator('img').evaluate(node => getComputedStyle(node).transform), 'none')
+  const [popup] = await Promise.all([page.waitForEvent('popup'), screenshot.tap()])
+  assert.equal(popup.url(), `${origin}/mountaindog/screenshots/screen-3.jpg`)
 })
 
 test('legal pages keep their deep links, language links and responsive table of contents', async t => {

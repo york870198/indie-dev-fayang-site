@@ -6,7 +6,7 @@ const { source } = defineProps({
 })
 
 // The branch-published HTML remains the content source during the migration.
-// This layout supports a text skip link, header, main and footer, with scripts in the head.
+// This layout supports a text skip link, header, main, footer and external scripts.
 const document = parse(source, { sourceCodeLocationInfo: true })
 const element = (parent, tag) => parent.childNodes.find(node => node.tagName === tag)
 const attributes = node => Object.fromEntries(node.attrs.map(({ name, value }) => [name, value]))
@@ -29,7 +29,13 @@ useHead({
   title: element(head, 'title').childNodes[0].value,
   meta: head.childNodes.filter(node => node.tagName === 'meta').map(attributes),
   link: head.childNodes.filter(node => node.tagName === 'link').map(attributes),
-  script: head.childNodes.filter(node => node.tagName === 'script').map(attributes),
+  script: [
+    ...head.childNodes.filter(node => node.tagName === 'script').map(attributes),
+    ...body.childNodes.filter(node => node.tagName === 'script').map(node => ({
+      ...attributes(node),
+      tagPosition: 'bodyClose',
+    })),
+  ],
 })
 </script>
 

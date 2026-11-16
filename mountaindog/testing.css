@@ -1,7 +1,8 @@
 /* Recruitment only: keep the studio's palette, typography and interactive tokens. */
 .recruit-page::before { display: none; }
 .recruit-page { --wrap: 80rem; }
-.recruit-page > :is(header, main, footer) { width: 100%; max-width: calc(var(--wrap) + 2 * var(--gut)); }
+.recruit-page > :is(header, main, footer),
+.recruit-page > :where(#__nuxt) > :is(header, main, footer) { width: 100%; max-width: calc(var(--wrap) + 2 * var(--gut)); }
 .recruit-page main { padding-top: 0; }
 .recruit-page section { scroll-margin-top: 32px; }
 .recruit-page h2 { margin: 0 0 32px; font-size: clamp(1.8rem, 3.3vw, 3rem); line-height: 1.25; }
