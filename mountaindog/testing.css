@@ -89,7 +89,7 @@
   .recruit-header { height: 72px; }
   .recruit-brand { font-size: 1.125rem; gap: 8px; }
   .recruit-brand img { width: 32px; height: 32px; }
-  .recruit-hero { min-height: calc(100svh - 72px); padding-block: 24px 32px; gap: 32px; }
+  .recruit-hero { min-height: 0; padding-block: var(--s-5); gap: var(--s-5); }
   .recruit-hero h1 { font-size: clamp(2.1rem, 10vw, 3rem); }
   .recruit-hero .hero-title-sub { font-size: 1.5rem; margin-top: 12px; }
   .hero-lead { font-size: 1.125rem; }
@@ -99,6 +99,22 @@
   .recruit-page .btn { width: 100%; justify-content: center; white-space: normal; text-align: center; }
   .step-map { gap: 8px 20px; }
   .step-map a { font-size: .9375rem; }
+  .recruit-steps, .recruit-feedback, .recruit-help { padding-block: var(--s-6); }
+  .step-map { margin-block: var(--s-4); }
+  .enrollment-list { gap: var(--s-2); }
+  .enrollment-list > li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--s-3);
+    align-items: baseline;
+    padding-block: var(--s-5);
+  }
+  .enrollment-list > li > * { grid-column: 1 / -1; }
+  .enrollment-list .step-index { grid-column: 1; margin: 0; }
+  .enrollment-list h3 { grid-column: 2; margin: 0 0 var(--s-3); }
+  .enrollment-list .btn { margin-block: var(--s-2) var(--s-3); }
+  .enrollment-list .step-next { margin-bottom: 0; }
+  .enrollment-list .inline-help { margin-top: var(--s-3); }
   .game-preview { padding: 0; }
   .preview-images { grid-template-columns: 1fr 1fr; gap: 16px; }
   .recruit-page h2 { margin-bottom: 24px; }
