@@ -1,6 +1,6 @@
 ---
 name: Fayang
-description: Warm, bilingual game and policy website
+description: A warm developer site with a product catalogue and bilingual policies
 colors:
   bg: "#f5f2eb"
   surface: "#ebe6db"
@@ -96,25 +96,25 @@ spacing:
 ---
 
 ## Overview
-既有網站使用暖紙色背景與栗色重點色，遊戲圖示承載角色識別。維持目前精簡入口與長文閱讀結構；style.css 是完整可執行樣式來源。
+首頁先介紹獨立開發者 Fayang，再列出產品與作品。各項產品使用同級列表，產品主頁承接封測與政策，開發者頁尾只放品牌和聯絡方式。新版首頁與後續產品頁的品牌規則由 `assets/brand/fayang.css` 接在 `style.css` 後，其他頁面仍沿用原本的樣式。
 
 ## Colors
-使用 --bg、--surface、--card 三層背景；正文 --ink，次要文字 --muted，連結 --accent。深色模式依 prefers-color-scheme 自動切換，完整對應值見 style.css。遊戲底色由 --game-tint 指定。Logo 固定品牌色不隨主題變更。
+使用 --bg、--surface、--card 三層背景；正文 --ink，次要文字 --muted，一般連結 --accent。新版品牌頁導覽和次要行動預設使用 --ink，滑鼠懸停與鍵盤焦點時使用 --accent。深色模式依 prefers-color-scheme 自動切換，完整對應值見 style.css。遊戲底色由 --game-tint 指定。Logo 固定品牌色不隨主題變更。
 
 ## Typography
-標題 Funnel Display、正文 Funnel Sans，中文使用系統後備字型。首頁標題 clamp(2.35rem, 1.85rem + 2.2vw, 3.5rem)，其他 h1 為 clamp(1.9rem, 1.55rem + 1.5vw, 2.55rem)。正文 16.5px / 1.72。英文輔助文字以較淡顏色區分，內容不省略；文件分中英文頁面。
+新版品牌頁自託管 Outfit（拉丁字元、400–500），中文使用 Noto Sans TC、PingFang TC、Microsoft JhengHei 或系統無襯線。字型不按固定文案裁切。首頁 Fayang 標題桌機用 7rem、窄版用 4.5rem，跟隨使用者字級。其餘既有頁面維持 Funnel Display／Funnel Sans 及雙語編排；文件分中英文頁面。
 
 ## Layout
-共用容器 --wrap: 68rem；文件 --measure: 39rem。頁邊距 20px，40rem 起 36px，64rem 起 56px。單遊戲卡片在 42rem 起左右排列；文件在 64rem 起顯示 15.5rem 側欄與 3.5rem 欄距。郵件地址允許換行。
+新版品牌頁內容寬度上限 1280px，兩側頁邊相等：24px、640px 起 48px、1024px 起 80px。目錄並排時圖寬 240px／300px；手機依名稱與狀態、圖片、說明、行動排序，主按鈕滿寬。新增產品只需在 `index.html` 的 `product-list` 下追加同級項目，維持原生清單與每列 h3。文件維持原有 39rem 閱讀寬度與桌面目錄。
 
 ## Elevation & Depth
-卡片用細框與內側柔和高光。滑鼠懸停時遊戲卡片微升 2px，圖示放大；文件閱讀頁保持平坦背景。
+新版目錄用分隔線和留白區分產品，不加卡片底板與陰影。既有遊戲主頁的圖示卡片仍維持細框與高光；文件閱讀頁保持平坦背景。
 
 ## Shapes
-遊戲卡片 20px，內層舞台 12px，按鈕 10px。平台標記與語言切換使用膠囊形狀。
+新版品牌主按鈕最小高度 48px、圓角 8px；次要入口有底線。遊戲截圖保持比例、直角呈現，Mountain Dog 場景從 `screen-2.jpg` 裁出，目錄載入 420w／720w WebP，保留狗狗全身並排除手機系統列和遊戲操作面板。保留原始截圖供產品頁使用。
 
 ## Components
-- 遊戲卡片：圖示、名稱、平台、發行狀態、雙語玩法與政策入口；首頁整卡可點擊。
+- 產品列：名稱、類型、平台、狀態、實際畫面、簡介與明確的產品入口。各產品依需要提供次要行動，例如 Mountain Dog 的「加入封閉測試」。
 - 語言切換：最小高度 44px，清楚標示目標語言。
 - 政策入口：每列最小高度 52px，各語言獨立連結。
 - 目錄：原生 details/summary，窄版可收合，桌面常開；每個章節 ID 必須唯一。

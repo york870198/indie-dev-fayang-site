@@ -10,6 +10,8 @@ const contentTypes = {
   '.txt': 'text/plain; charset=utf-8',
   '.jpg': 'image/jpeg',
   '.png': 'image/png',
+  '.webp': 'image/webp',
+  '.woff2': 'font/woff2',
 }
 
 export function createPreviewServer(directory = '.output/public') {

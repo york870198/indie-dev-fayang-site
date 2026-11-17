@@ -110,6 +110,28 @@ test('navigation pages keep the original documents and HTTP status', async () =>
   }
 })
 
+test('the static homepage introduces Fayang and links to the product and testing guide', async () => {
+  for (const path of ['/', '/index.html']) {
+    const response = await fetch(`${origin}${path}`)
+    assert.equal(response.status, 200)
+    const document = parse(await response.text())
+    const h1 = find(document, node => node.tagName === 'h1')
+    assert.equal(h1.childNodes[0].value, 'Fayang')
+    const main = find(document, node => node.tagName === 'main')
+    const heading = find(main, node => node.tagName === 'h2')
+    assert.equal(heading.childNodes[0].value, '產品與作品')
+    const image = find(main, node => node.tagName === 'img')
+    const asset = await fetch(new URL(image.attrs.find(attr => attr.name === 'src').value, response.url))
+    assert.equal(asset.status, 200)
+    assert.equal(asset.headers.get('content-type'), 'image/webp')
+    for (const href of ['mountaindog/', 'mountaindog/testing.html']) {
+      assert.ok(find(main, node => node.tagName === 'a' && node.attrs.some(attr =>
+        attr.name === 'href' && attr.value === href)), href)
+      assert.equal((await fetch(new URL(href, response.url))).status, 200)
+    }
+  }
+})
+
 test('navigation and terms pages keep their layout and skip links without JavaScript', async t => {
   const baseline = createPreviewServer('.')
   baseline.listen(0, '127.0.0.1')
@@ -151,7 +173,7 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
       assert.equal(page.url(), `${origin}${target}`)
     }
     await page.goto(origin)
-    await page.locator('main a.card-link').click()
+    await page.getByRole('link', { name: '查看產品介紹' }).click()
     assert.equal(page.url(), `${origin}/mountaindog/`)
     await page.close()
   }

@@ -5,7 +5,7 @@ const output = '.output/public'
 
 // Keep the pages and assets that Nuxt does not generate at their original URLs.
 const previewFiles = [
-  'app-ads.txt', 'favicon.svg', 'style.css', 'toc.js',
+  'app-ads.txt', 'assets/brand', 'favicon.svg', 'style.css', 'toc.js',
   'mountaindog/testing.css', 'mountaindog/icon.png',
   'mountaindog/assets/motion', 'mountaindog/screenshots',
 ]
