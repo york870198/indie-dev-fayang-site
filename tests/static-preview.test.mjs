@@ -179,6 +179,41 @@ test('navigation and terms pages keep their layout and skip links without JavaSc
   }
 })
 
+test('the static product page leads to the guide, four policy documents and the homepage', async t => {
+  const browser = await chromium.launch()
+  t.after(() => browser.close())
+  const page = await browser.newPage({
+    viewport: { width: 360, height: 740 }, hasTouch: true, isMobile: true, javaScriptEnabled: false,
+  })
+  page.setDefaultTimeout(5000)
+  await page.route('https://**/*', route => route.abort())
+
+  await page.goto(origin)
+  await page.getByRole('link', { name: '查看產品介紹' }).tap()
+  await page.waitForURL(`${origin}/mountaindog/`)
+  const joinLink = page.getByRole('main').getByRole('link', { name: '加入封閉測試', exact: true })
+  const button = await joinLink.boundingBox()
+  assert.ok(button && button.y >= 0 && button.y + button.height <= 740)
+  await joinLink.tap()
+  await page.waitForURL(`${origin}${testingPath}`)
+
+  for (const path of ['/mountaindog/', '/mountaindog/index.html']) {
+    assert.equal((await page.goto(`${origin}${path}`)).status(), 200)
+    await page.getByRole('link', { name: '閱讀政策與條款' }).tap()
+    const policies = page.getByRole('region', { name: /政策與條款/ })
+    assert.equal(await policies.getAttribute('id'), 'policies')
+    assert.equal(await page.locator(':target').getAttribute('id'), 'policies')
+    for (const { path: policy } of legalPages) {
+      const documentLink = policies.locator(`a[href="${policy.split('/').at(-1)}"]`)
+      await documentLink.tap()
+      await page.waitForURL(`${origin}/${policy}`)
+      await page.goBack()
+    }
+    await page.getByRole('link', { name: '返回首頁' }).tap()
+    await page.waitForURL(`${origin}/`)
+  }
+})
+
 test('desktop recruitment keeps keyboard, screenshot and motion behavior after navigation', async t => {
   const browser = await chromium.launch()
   t.after(() => browser.close())

@@ -1,0 +1,136 @@
+.fayang .game-product {
+  width: 100%;
+  padding: 0;
+}
+
+/* The scene's sizes attribute follows the brand gutters, max width, and hero columns. */
+.game-wrap {
+  width: min(100% - 2 * var(--gut), var(--wrap));
+  margin-inline: auto;
+}
+
+.game-hero {
+  display: grid;
+  gap: var(--s-5);
+  align-items: start;
+  padding-block: var(--s-6) var(--s-7);
+}
+
+.game-intro h1 {
+  font-size: 3rem;
+  font-weight: 400;
+  text-wrap: wrap;
+  line-height: 1;
+  letter-spacing: -.045em;
+}
+
+.game-status {
+  margin: 0;
+  font-size: .875rem;
+  color: var(--muted);
+}
+
+.game-intro h1, .game-genre, .game-summary, .game-hero-actions {
+  margin: var(--s-4) 0 0;
+}
+
+.game-genre { font-size: 1.375rem; font-weight: 500; line-height: 1.5; }
+.game-summary { margin-bottom: var(--s-4); line-height: 1.75; }
+.game-summary small { display: block; margin-top: var(--s-2); color: var(--muted); font-size: .875em; }
+
+.game-hero-actions, .game-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-4);
+}
+
+.game-hero-actions a { width: 100%; }
+.game-hero-actions .brand-link { border-bottom: 1px solid var(--line-strong); text-decoration-color: transparent; }
+.game-hero-actions .brand-link:is(:hover, :focus-visible) { text-decoration-color: currentColor; }
+
+.game-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1080 / 1016;
+}
+
+.game-policies {
+  background: var(--surface);
+  padding-block: var(--s-8) var(--s-7);
+}
+
+.game-policies:focus-visible { outline-offset: -4px; }
+
+.game-policy-layout { display: grid; gap: var(--s-5); }
+
+.game-policy-layout h2 {
+  margin: 0 0 var(--s-4);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.3;
+  text-wrap: wrap;
+}
+
+.game-policy-layout h2 > span[lang] {
+  display: block;
+  margin: 0;
+  font-size: .6em;
+}
+
+.game-policy-layout p:last-child { margin-block-end: 0; }
+.game-policy-list { list-style: none; margin: 0; padding: 0; }
+
+.game-policy-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: 72px;
+  padding-block: var(--s-2);
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--ink);
+  font-size: 1.125rem;
+  text-decoration: none;
+}
+
+.game-policy-list a:is(:hover, :focus-visible) { color: var(--accent); }
+.game-policy-list small { display: block; color: var(--muted); font-size: .875rem; }
+
+@media (width < 640px) {
+  .brand-header .game-nav-contact { display: none; }
+}
+
+@media (min-width: 640px) {
+  .game-hero { padding-block: var(--s-7) var(--s-8); gap: var(--s-6); }
+  .game-intro h1 { font-size: 4rem; }
+  .game-genre { font-size: 1.5rem; }
+  .game-summary { font-size: 1.125rem; max-width: 25em; }
+  .game-hero-actions a { width: auto; }
+  .game-hero-actions .brand-link { border: 0; text-decoration-color: var(--line-strong); }
+
+  .game-policy-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-6);
+  }
+
+  .game-policy-layout h2 { font-size: 2.5rem; }
+  .game-policy-list a { min-height: 88px; font-size: 1.25rem; }
+}
+
+@media (min-width: 1024px) {
+  .game-hero {
+    min-height: calc(100svh - 72px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-5);
+  }
+
+  .game-intro h1 { margin-top: var(--s-5); font-size: 5rem; }
+  .game-intro h1 span { display: block; }
+  .game-genre, .game-summary, .game-hero-actions { margin-top: var(--s-5); }
+  .game-genre { font-size: 1.75rem; }
+  .game-summary { margin-bottom: var(--s-6); }
+  .game-policies { padding-block: var(--s-9) var(--s-8); }
+  .game-policy-layout h2 { font-size: 3rem; }
+}

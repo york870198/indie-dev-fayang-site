@@ -4,88 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mountain Dog｜Fayang</title>
-<meta name="description" content="Fayang 開發的 Android 遊戲 Mountain Dog：隱私權政策與服務條款。Privacy Policy and Terms of Service for Mountain Dog.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@400..600&family=Funnel+Sans:wght@400..600&display=swap" rel="stylesheet">
+<meta name="description" content="Mountain Dog 是 Fayang 開發的伯恩山犬養成遊戲。查看 Android 封閉測試指南，以及中英文隱私權政策與服務條款。">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../assets/brand/fayang.css">
+<link rel="stylesheet" href="product.css">
 </head>
-<body class="hub">
+<body class="fayang">
 <a class="skip" href="#content">跳到主要內容</a>
-<header>
-<nav aria-label="網站導覽">
-<p class="crumbs">
-<a class="crumb-brand" href="../">
-<svg class="brand-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="6" fill="#8a3b12"/><path fill="#fdfcf9" d="M9 6h15v5H14v4h8v5h-8v6H9z"/></svg>
-<span>Fayang 首頁 · <span lang="en">Home</span></span>
-</a>
-</p>
+<header class="brand-header">
+<nav aria-label="主要導覽">
+<a class="brand-home" href="../" aria-label="Fayang 首頁"><img src="../favicon.svg" alt="" width="32" height="32">Fayang</a>
+<div class="brand-nav">
+<a href="#policies">政策與條款</a>
+<a class="game-nav-contact" href="mailto:support@indie-dev-fayang.com">聯絡</a>
+</div>
 </nav>
 </header>
 
-<main id="content">
-<div class="game hub-hero" style="--game-tint: #bcd9f3">
-<div class="game-stage">
-<img src="icon.png" alt="" width="96" height="96">
-</div>
-<div class="game-body">
-<div class="game-head">
-<h1 lang="en">Mountain Dog</h1>
-<p class="meta"><span class="badge" lang="en">Android</span></p>
-<p class="release-status">Google Play 封閉測試招募中 · <span lang="en">Closed testing recruitment</span></p>
-</div>
-<p class="game-desc">自由輸入食物名稱，分伯恩山犬一口，讓牠長得跟山一樣大。<br><span lang="en">Type a food name to feed your Bernese Mountain Dog and help it grow as big as a mountain.</span></p>
-<div class="game-actions">
-<a class="btn btn--primary" href="testing.html">
-<span>加入 Google Play 封閉測試</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
+<main id="content" class="game-product" tabindex="-1">
+<section class="game-hero game-wrap" aria-labelledby="game-title">
+<div class="game-intro">
+<p class="game-status"><span lang="en">Android</span> · 封閉測試招募中</p>
+<h1 id="game-title" lang="en">Mountain <span>Dog</span></h1>
+<p class="game-genre">伯恩山犬養成遊戲</p>
+<p class="game-summary">自由輸入食物名稱，分牠一口，<br>讓牠長得跟山一樣大。
+<small lang="en">Type a food name to feed your Bernese Mountain Dog and help it grow as big as a mountain.</small></p>
+<p class="game-status">免費下載 · 無內購</p>
+<div class="game-hero-actions" id="testing-h">
+<a class="btn btn--primary brand-button" href="testing.html">加入封閉測試 <span aria-hidden="true">→</span></a>
+<a class="brand-link" href="#policies"><span>閱讀政策與條款 <span aria-hidden="true">↓</span></span></a>
 </div>
 </div>
-</div>
-
-<section class="hub-docs" aria-labelledby="testing-h">
-<h2 id="testing-h">測試計畫 <span lang="en">Testing Program</span></h2>
-<ul class="docs">
-<li class="doc-card">
-<a href="testing.html">
-<span>Google Play 封閉測試招募與安裝說明</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
-</li>
-</ul>
+<img class="game-scene" src="screenshots/scene-720.webp"
+  srcset="screenshots/scene-420.webp 420w, screenshots/scene-720.webp 720w, screenshots/scene-1080.webp 1080w"
+  sizes="(width < 640px) calc(100vw - 48px), (width < 1024px) calc(100vw - 96px), min(50vw - 92px, 628px)"
+  alt="伯恩山犬坐在山間小屋前的遊戲場景" width="720" height="677" fetchpriority="high">
 </section>
 
-<section class="hub-docs" aria-labelledby="policies-h">
+<section class="game-policies" id="policies" tabindex="-1" aria-labelledby="policies-h">
+<div class="game-policy-layout game-wrap">
+<div>
 <h2 id="policies-h">政策與條款 <span lang="en">Policies</span></h2>
-<ul class="docs">
-<li class="doc-card">
-<a href="privacy.html">
-<span>隱私權政策</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
-<a href="privacy-en.html" lang="en" hreflang="en">
-<span>Privacy Policy</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
-</li>
-<li class="doc-card">
-<a href="terms.html">
-<span>服務條款</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
-<a href="terms-en.html" lang="en" hreflang="en">
-<span>Terms of Service</span>
-<svg class="m-arrow" viewBox="0 0 12 12" aria-hidden="true"><path class="m-arrow__stem" d="M1 6h8"/><path class="m-arrow__head" d="M4.5 2.5 8 6l-3.5 3.5"/></svg>
-</a>
-</li>
+<p>了解遊戲資料如何處理，以及使用遊戲時適用的規則。</p>
+<p>有遊戲問題？ <a href="mailto:support@indie-dev-fayang.com">寄信給 Fayang</a></p>
+</div>
+<ul class="game-policy-list" role="list">
+<li><a href="privacy.html"><span>隱私權政策<small>繁體中文</small></span><span aria-hidden="true">→</span></a></li>
+<li><a href="privacy-en.html" lang="en" hreflang="en"><span>Privacy Policy<small>English</small></span><span aria-hidden="true">→</span></a></li>
+<li><a href="terms.html"><span>服務條款<small>繁體中文</small></span><span aria-hidden="true">→</span></a></li>
+<li><a href="terms-en.html" lang="en" hreflang="en"><span>Terms of Service<small>English</small></span><span aria-hidden="true">→</span></a></li>
 </ul>
+</div>
 </section>
 </main>
 
-<footer>
-<p>聯絡 <span lang="en">Contact</span>：<a href="mailto:support@indie-dev-fayang.com">support@indie-dev-fayang.com</a></p>
+<footer class="brand-footer">
+<p>Fayang · 獨立開發者</p>
+<nav class="game-footer-nav" aria-label="頁尾導覽">
+<a class="brand-link" href="../">返回首頁</a>
+<a class="brand-link" href="testing.html">加入封閉測試</a>
+</nav>
 </footer>
 </body>
 </html>
