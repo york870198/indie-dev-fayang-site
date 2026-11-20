@@ -217,7 +217,7 @@ test('the static product page leads to the guide, four policy documents and the 
 test('the testing QR and join button are visible on the first screen without JavaScript', async t => {
   const browser = await chromium.launch()
   t.after(() => browser.close())
-  for (const [width, height] of [[360, 740], [390, 844], [768, 1024], [820, 1180], [1024, 768], [1440, 900]]) {
+  for (const [width, height] of [[320, 740], [360, 740], [390, 844], [768, 1024], [820, 1180], [1024, 768], [1440, 900]]) {
     const page = await browser.newPage({ viewport: { width, height }, javaScriptEnabled: false })
     await page.route('https://**/*', route => route.abort())
     await page.goto(`${origin}/mountaindog/`)
@@ -229,6 +229,16 @@ test('the testing QR and join button are visible on the first screen without Jav
       const box = await element.boundingBox()
       assert.ok(box && box.x >= 0 && box.y >= 0 && box.x + box.width <= width && box.y + box.height <= height,
         `QR and join button must fit ${width}x${height}: ${JSON.stringify(box)}`)
+    }
+    const entry = await page.locator('.game-testing-entry').boundingBox()
+    const join = await page.locator('.game-testing-entry > a').boundingBox()
+    const policy = await page.getByRole('link', { name: '閱讀政策與條款' }).boundingBox()
+    assert.ok(policy.y >= entry.y + entry.height && policy.x === entry.x)
+    if (width < 640) {
+      assert.equal(join.width, entry.width, 'mobile join button fills the content width')
+      assert.equal(join.height, 48, 'default mobile label stays on one line')
+    } else {
+      assert.ok(join.width < entry.width / 2, 'desktop join button uses its content width')
     }
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
     await page.close()

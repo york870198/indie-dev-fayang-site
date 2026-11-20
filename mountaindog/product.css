@@ -30,7 +30,7 @@
   color: var(--muted);
 }
 
-.game-intro h1, .game-genre, .game-summary, .game-hero-actions {
+.game-intro h1, .game-genre, .game-summary {
   margin: var(--s-4) 0 0;
 }
 
@@ -38,32 +38,35 @@
 .game-summary { margin-bottom: var(--s-4); line-height: 1.75; }
 .game-summary small { display: block; margin-top: var(--s-2); color: var(--muted); font-size: .875em; }
 
-.game-hero-actions, .game-footer-nav {
+.game-footer-nav {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--s-1) var(--s-4);
 }
 
-.game-hero-actions a { width: 100%; }
-.game-hero-actions .brand-link { border-bottom: 1px solid var(--line-strong); text-decoration-color: transparent; }
-.game-hero-actions .brand-link:is(:hover, :focus-visible) { text-decoration-color: currentColor; }
-
 .game-testing-entry {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 148px;
-  align-items: center;
-  gap: var(--s-3);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-4);
   margin-top: var(--s-4);
 }
 
-.game-testing-entry .game-hero-actions { margin: 0; gap: var(--s-1); }
-.game-testing-entry .game-hero-actions a { width: 100%; }
-.game-testing-qr { display: block; width: 148px; height: 148px; }
-.game-qr-hint { margin: var(--s-2) 0 0; font-size: .875rem; color: var(--muted); }
+.game-scan {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-width: 0;
+}
 
-@media (width < 360px) {
-  .game-testing-entry { grid-template-columns: 1fr; }
+.game-testing-qr { display: block; flex: none; width: 148px; height: 148px; }
+.game-qr-hint { margin: 0; max-width: 8em; font-size: .875rem; color: var(--muted); }
+.fayang .game-policy-link { margin-top: var(--s-4); justify-content: flex-start; text-align: left; }
+
+@media (min-width: 640px) {
+  .game-testing-entry { flex-direction: row; align-items: center; gap: var(--s-5); }
+  .game-testing-entry > .brand-button { flex: none; }
 }
 
 .game-scene {
@@ -124,8 +127,6 @@
   .game-intro h1 { font-size: 4rem; }
   .game-genre { font-size: 1.5rem; }
   .game-summary { font-size: 1.125rem; max-width: 25em; }
-  .game-hero-actions a { width: auto; }
-  .game-hero-actions .brand-link { border: 0; text-decoration-color: var(--line-strong); }
 
   .game-policy-layout {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -145,7 +146,7 @@
 
   .game-intro h1 { margin-top: var(--s-5); font-size: 5rem; }
   .game-intro h1 span { display: block; }
-  .game-genre, .game-summary, .game-hero-actions { margin-top: var(--s-5); }
+  .game-genre, .game-summary { margin-top: var(--s-5); }
   .game-genre { font-size: 1.75rem; }
   .game-summary { margin-bottom: var(--s-6); }
   .game-policies { padding-block: var(--s-9) var(--s-8); }
