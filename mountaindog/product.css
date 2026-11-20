@@ -49,6 +49,23 @@
 .game-hero-actions .brand-link { border-bottom: 1px solid var(--line-strong); text-decoration-color: transparent; }
 .game-hero-actions .brand-link:is(:hover, :focus-visible) { text-decoration-color: currentColor; }
 
+.game-testing-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 148px;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.game-testing-entry .game-hero-actions { margin: 0; gap: var(--s-1); }
+.game-testing-entry .game-hero-actions a { width: 100%; }
+.game-testing-qr { display: block; width: 148px; height: 148px; }
+.game-qr-hint { margin: var(--s-2) 0 0; font-size: .875rem; color: var(--muted); }
+
+@media (width < 360px) {
+  .game-testing-entry { grid-template-columns: 1fr; }
+}
+
 .game-scene {
   display: block;
   width: 100%;

@@ -88,7 +88,7 @@ test('app-ads.txt returns the original bytes as plain text', async () => {
 })
 
 test('recruitment styles, motion script, icon and screenshots retain their original bytes', async () => {
-  const recruitmentAssets = ['testing.css', 'assets/motion/motion.css', 'assets/motion/motion.js', 'icon.png',
+  const recruitmentAssets = ['testing.css', 'testing-qr.svg', 'assets/motion/motion.css', 'assets/motion/motion.js', 'icon.png',
     'screenshots/screen-1.jpg', 'screenshots/screen-2.jpg', 'screenshots/screen-3.jpg']
   for (const path of ['style.css', 'favicon.svg', ...recruitmentAssets.map(asset => `mountaindog/${asset}`)]) {
     const response = await fetch(`${origin}/${path}`)
@@ -211,6 +211,27 @@ test('the static product page leads to the guide, four policy documents and the 
     }
     await page.getByRole('link', { name: '返回首頁' }).tap()
     await page.waitForURL(`${origin}/`)
+  }
+})
+
+test('the testing QR and join button are visible on the first screen without JavaScript', async t => {
+  const browser = await chromium.launch()
+  t.after(() => browser.close())
+  for (const [width, height] of [[360, 740], [390, 844], [768, 1024], [820, 1180], [1024, 768], [1440, 900]]) {
+    const page = await browser.newPage({ viewport: { width, height }, javaScriptEnabled: false })
+    await page.route('https://**/*', route => route.abort())
+    await page.goto(`${origin}/mountaindog/`)
+    await page.evaluate(() => document.fonts.ready)
+    const qr = page.getByRole('img', { name: '封閉測試頁面的 QR code' })
+    assert.equal(await qr.count(), 1)
+    await qr.evaluate(node => node.decode())
+    for (const element of [qr, page.getByRole('main').getByRole('link', { name: '加入封閉測試', exact: true })]) {
+      const box = await element.boundingBox()
+      assert.ok(box && box.x >= 0 && box.y >= 0 && box.x + box.width <= width && box.y + box.height <= height,
+        `QR and join button must fit ${width}x${height}: ${JSON.stringify(box)}`)
+    }
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
+    await page.close()
   }
 })
 
