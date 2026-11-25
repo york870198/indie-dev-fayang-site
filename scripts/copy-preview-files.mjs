@@ -1,5 +1,5 @@
 import { cp } from 'node:fs/promises'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 
 const output = '.output/public'
 
@@ -11,5 +11,8 @@ const previewFiles = [
 ]
 
 for (const path of previewFiles) {
-  await cp(path, join(output, path), { recursive: true })
+  await cp(path, join(output, path), {
+    recursive: true,
+    filter: source => !['README.md', 'provenance.json'].includes(basename(source)),
+  })
 }

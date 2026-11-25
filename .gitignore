@@ -15,3 +15,13 @@ desktop.ini
 .output/
 dist/
 node_modules/
+
+# Local caches and disposable verification output (keep specs and issues)
+/.scratch/npm-cache/
+/.scratch/playwright/
+/.scratch/playwright-browsers/
+/.scratch/audit-*.png
+/.scratch/layout-*.png
+/.scratch/vue-migration/rollback-site/
+/.scratch/vue-migration/rollback-site.tar
+/.scratch/vue-migration/actionlint.exe

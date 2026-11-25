@@ -99,6 +99,7 @@
     "crop": null,
     "widths": [
       360,
+      480,
       720,
       1080
     ],
@@ -117,7 +118,6 @@
     "sha256": "6c921afb86e8b5f5d54dde313048f763b349f3fad2a507b5a9f1eed4b598e424",
     "crop": null,
     "widths": [
-      960,
       1920
     ],
     "sourceSize": [
@@ -136,6 +136,7 @@
     "crop": null,
     "widths": [
       360,
+      480,
       720,
       1080
     ],

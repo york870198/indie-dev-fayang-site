@@ -225,10 +225,11 @@ test('the product shows the dog before recruitment and keeps its pictures access
     await hero.evaluate(node => node.decode())
     const box = await hero.boundingBox()
     assert.ok(box && box.y < height && box.y + box.height / 2 < height, `dog is in the first viewport at ${width}`)
-    const qr = page.getByRole('img', { name: '封閉測試頁面的 QR code' })
+    const qr = page.getByRole('img', { name: '封閉測試頁面的 QR code', includeHidden: true })
     assert.equal(await qr.count(), 1)
-    assert.ok((await qr.boundingBox()).y > box.y + box.height, 'recruitment follows the game imagery')
-    for (const image of await page.locator('main img').all()) {
+    if (width < 640) assert.equal(await qr.isVisible(), false, 'phones use the direct testing link')
+    else assert.ok((await qr.boundingBox()).y > box.y + box.height, 'recruitment follows the game imagery')
+    for (const image of await page.locator('main img:visible').all()) {
       await image.scrollIntoViewIfNeeded()
       await image.evaluate(node => node.decode())
       assert.ok(await image.evaluate(node => node.naturalWidth > 0 && node.hasAttribute('width') && node.hasAttribute('height')))

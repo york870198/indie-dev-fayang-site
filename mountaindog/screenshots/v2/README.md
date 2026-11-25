@@ -15,6 +15,8 @@
 - 場景與日常圖裁去系統列及操作區；玩法圖完整保留所有操作介面。沒有生成新美術，也沒有用修圖掩蓋遊戲缺陷。
 - v1 圖片保留供開發者首頁與封測說明頁使用，本票只更新 Mountain Dog 產品頁。
 
+只保留目前頁面引用的輸出尺寸；橫向預覽以 1920px 完整圖片連結提供。此說明與 `provenance.json` 用於維護素材，不複製至發布產物。
+
 ## 預覽與發布
 
 在網站專案執行 `npm run generate`、`npm test`、`npm run preview`，開啟 `http://127.0.0.1:8000/mountaindog/`。Nuxt 頁面直接讀取產品 HTML，生成結果在 `.output/public/`；靜態網站不需要客戶端 JavaScript。
