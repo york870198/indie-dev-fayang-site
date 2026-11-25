@@ -42,15 +42,21 @@ def check_redirect(opener, url, target):
 
 def verify(site, origin):
     opener = build_opener(KeepRedirect())
-    required = [
+    required = {
         'index.html', '404.html', 'app-ads.txt', 'favicon.svg', 'style.css', 'toc.js',
         'mountaindog/index.html', 'mountaindog/testing.html', 'mountaindog/testing.css',
         'mountaindog/privacy.html', 'mountaindog/privacy-en.html',
         'mountaindog/terms.html', 'mountaindog/terms-en.html', 'mountaindog/icon.png',
-        'mountaindog/assets/motion/motion.css', 'mountaindog/assets/motion/motion.js',
+        'mountaindog/assets/motion/motion.css',
         *(f'mountaindog/screenshots/screen-{number}.jpg' for number in range(1, 4)),
-    ]
-    for path in required:
+    }
+    # Follow the release artifact so new assets and legacy rollbacks use the same check.
+    required.update(
+        path.relative_to(site).as_posix()
+        for path in site.rglob('*')
+        if path.is_file() and path.suffix.lower() in {'.css', '.js', '.svg', '.jpg', '.png', '.webp', '.woff2'}
+    )
+    for path in sorted(required):
         check_file(opener, f'{origin}/{path}', site / path)
     check_file(opener, f'{origin}/', site / 'index.html')
     check_file(opener, f'{origin}/mountaindog/', site / 'mountaindog/index.html')

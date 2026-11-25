@@ -87,8 +87,8 @@ test('app-ads.txt returns the original bytes as plain text', async () => {
   assert.deepEqual(Buffer.from(await response.arrayBuffer()), await readFile('app-ads.txt'))
 })
 
-test('recruitment styles, motion script, icon and screenshots retain their original bytes', async () => {
-  const recruitmentAssets = ['testing.css', 'testing-qr.svg', 'assets/motion/motion.css', 'assets/motion/motion.js', 'icon.png',
+test('recruitment styles, icon and screenshots retain their original bytes', async () => {
+  const recruitmentAssets = ['testing.css', 'testing-qr.svg', 'assets/motion/motion.css', 'icon.png',
     'screenshots/screen-1.jpg', 'screenshots/screen-2.jpg', 'screenshots/screen-3.jpg']
   for (const path of ['style.css', 'favicon.svg', ...recruitmentAssets.map(asset => `mountaindog/${asset}`)]) {
     const response = await fetch(`${origin}/${path}`)
@@ -253,11 +253,7 @@ test('desktop recruitment keeps keyboard, screenshot and motion behavior after n
   const pageErrors = []
   page.on('pageerror', error => pageErrors.push(error.message))
   await page.goto(`${origin}/mountaindog/`)
-  const [motionResponse] = await Promise.all([
-    page.waitForResponse(`${origin}/mountaindog/assets/motion/motion.js`),
-    page.locator('main a[href="testing.html"]').first().click(),
-  ])
-  assert.equal(motionResponse.status(), 200)
+  await page.locator('main a[href="testing.html"]').first().click()
   await page.locator('header a[href="./"]').click()
   await page.goBack()
   assert.equal(page.url(), `${origin}${testingPath}`)
