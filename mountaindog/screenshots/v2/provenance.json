@@ -1,0 +1,175 @@
+[
+  {
+    "name": "house",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/tablet-10/zh-Hant/01-house.png",
+    "sha256": "f22d9f39b3e18a1760717b9fff33c2ec5ddbfe1f491305cac8739e2c9854bb79",
+    "crop": [
+      180,
+      36,
+      1780,
+      836
+    ],
+    "widths": [
+      480,
+      960,
+      1600
+    ],
+    "sourceSize": [
+      1920,
+      1080
+    ],
+    "outputRatio": [
+      1600,
+      800
+    ]
+  },
+  {
+    "name": "house-close",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/tablet-10/zh-Hant/01-house.png",
+    "sha256": "f22d9f39b3e18a1760717b9fff33c2ec5ddbfe1f491305cac8739e2c9854bb79",
+    "crop": [
+      650,
+      36,
+      1550,
+      836
+    ],
+    "widths": [
+      450,
+      900
+    ],
+    "sourceSize": [
+      1920,
+      1080
+    ],
+    "outputRatio": [
+      900,
+      800
+    ]
+  },
+  {
+    "name": "sleep",
+    "source": "MountainDog/assets/store-listing-v2/website/sleep.png",
+    "sha256": "5d9437f613e8d7ba2d5b74af42f2fceb0db0cf2dc92bd72b5a225cc93f0076cb",
+    "crop": [
+      250,
+      230,
+      1000,
+      600
+    ],
+    "widths": [
+      450,
+      750
+    ],
+    "sourceSize": [
+      1000,
+      750
+    ],
+    "outputRatio": [
+      750,
+      370
+    ]
+  },
+  {
+    "name": "roll",
+    "source": "MountainDog/assets/store-listing-v2/website/roll.png",
+    "sha256": "ad113606b1872541fd1b8715d560c1d6fb62e4b9db6a383793039a6c686744b3",
+    "crop": [
+      250,
+      230,
+      1000,
+      600
+    ],
+    "widths": [
+      450,
+      750
+    ],
+    "sourceSize": [
+      1000,
+      750
+    ],
+    "outputRatio": [
+      750,
+      370
+    ]
+  },
+  {
+    "name": "serve",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/phone/zh-Hant/02-serve.png",
+    "sha256": "340a9dccb2b76fa253ee7ce240318e509bfc293f222c66d227ff05b1311b3747",
+    "crop": null,
+    "widths": [
+      360,
+      720,
+      1080
+    ],
+    "sourceSize": [
+      1080,
+      1920
+    ],
+    "outputRatio": [
+      1080,
+      1920
+    ]
+  },
+  {
+    "name": "preview",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/tablet-10/zh-Hant/02-preview.png",
+    "sha256": "6c921afb86e8b5f5d54dde313048f763b349f3fad2a507b5a9f1eed4b598e424",
+    "crop": null,
+    "widths": [
+      960,
+      1920
+    ],
+    "sourceSize": [
+      1920,
+      1080
+    ],
+    "outputRatio": [
+      1920,
+      1080
+    ]
+  },
+  {
+    "name": "preview-phone",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/phone/zh-Hant/03-preview.png",
+    "sha256": "22433421918a44e522cff33ae0cb1f7779d82a545d6cc6d6b5e320b131e20c5e",
+    "crop": null,
+    "widths": [
+      360,
+      720,
+      1080
+    ],
+    "sourceSize": [
+      1080,
+      1920
+    ],
+    "outputRatio": [
+      1080,
+      1920
+    ]
+  },
+  {
+    "name": "mountain",
+    "source": "MountainDog/assets/store-listing-v2/screenshots/tablet-10/zh-Hant/03-mountain.png",
+    "sha256": "aa70bcf3ac4e634706bbcf6f71c29cebda3b4820f751b51ee23a8dcbb10626ab",
+    "crop": [
+      120,
+      36,
+      1800,
+      846
+    ],
+    "widths": [
+      480,
+      960,
+      1680
+    ],
+    "sourceSize": [
+      1920,
+      1080
+    ],
+    "outputRatio": [
+      1680,
+      810
+    ]
+  }
+]

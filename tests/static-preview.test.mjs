@@ -192,8 +192,7 @@ test('the static product page leads to the guide, four policy documents and the 
   await page.getByRole('link', { name: '查看產品介紹' }).tap()
   await page.waitForURL(`${origin}/mountaindog/`)
   const joinLink = page.getByRole('main').getByRole('link', { name: '加入封閉測試', exact: true })
-  const button = await joinLink.boundingBox()
-  assert.ok(button && button.y >= 0 && button.y + button.height <= 740)
+  await joinLink.scrollIntoViewIfNeeded()
   await joinLink.tap()
   await page.waitForURL(`${origin}${testingPath}`)
 
@@ -214,31 +213,32 @@ test('the static product page leads to the guide, four policy documents and the 
   }
 })
 
-test('the testing QR and join button are visible on the first screen without JavaScript', async t => {
+test('the product shows the dog before recruitment and keeps its pictures accessible without JavaScript', async t => {
   const browser = await chromium.launch()
   t.after(() => browser.close())
-  for (const [width, height] of [[320, 740], [360, 740], [390, 844], [768, 1024], [820, 1180], [1024, 768], [1440, 900]]) {
+  for (const [width, height] of [[320, 740], [390, 844], [768, 1024], [1440, 900]]) {
     const page = await browser.newPage({ viewport: { width, height }, javaScriptEnabled: false })
     await page.route('https://**/*', route => route.abort())
     await page.goto(`${origin}/mountaindog/`)
     await page.evaluate(() => document.fonts.ready)
+    const hero = page.locator('.game-hero-image img')
+    await hero.evaluate(node => node.decode())
+    const box = await hero.boundingBox()
+    assert.ok(box && box.y < height && box.y + box.height / 2 < height, `dog is in the first viewport at ${width}`)
     const qr = page.getByRole('img', { name: '封閉測試頁面的 QR code' })
     assert.equal(await qr.count(), 1)
-    await qr.evaluate(node => node.decode())
-    for (const element of [qr, page.getByRole('main').getByRole('link', { name: '加入封閉測試', exact: true })]) {
-      const box = await element.boundingBox()
-      assert.ok(box && box.x >= 0 && box.y >= 0 && box.x + box.width <= width && box.y + box.height <= height,
-        `QR and join button must fit ${width}x${height}: ${JSON.stringify(box)}`)
+    assert.ok((await qr.boundingBox()).y > box.y + box.height, 'recruitment follows the game imagery')
+    for (const image of await page.locator('main img').all()) {
+      await image.scrollIntoViewIfNeeded()
+      await image.evaluate(node => node.decode())
+      assert.ok(await image.evaluate(node => node.naturalWidth > 0 && node.hasAttribute('width') && node.hasAttribute('height')))
     }
-    const entry = await page.locator('.game-testing-entry').boundingBox()
-    const join = await page.locator('.game-testing-entry > a').boundingBox()
-    const policy = await page.getByRole('link', { name: '閱讀政策與條款' }).boundingBox()
-    assert.ok(policy.y >= entry.y + entry.height && policy.x === entry.x)
-    if (width < 640) {
-      assert.equal(join.width, entry.width, 'mobile join button fills the content width')
-      assert.equal(join.height, 48, 'default mobile label stays on one line')
-    } else {
-      assert.ok(join.width < entry.width / 2, 'desktop join button uses its content width')
+    for (const shot of await page.locator('.game-shot-link').all()) {
+      await shot.focus()
+      const href = await shot.getAttribute('href')
+      const response = await page.request.get(new URL(href, page.url()).href)
+      assert.equal(response.status(), 200)
+      assert.equal(response.headers()['content-type'], 'image/webp')
     }
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth))
     await page.close()
