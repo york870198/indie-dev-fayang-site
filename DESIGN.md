@@ -96,7 +96,7 @@ spacing:
 ---
 
 ## Overview
-首頁先介紹獨立開發者 Fayang，再列出產品與作品。各項產品使用同級列表，產品主頁承接封測與政策，開發者頁尾放品牌和聯絡方式。首頁與 Mountain Dog 主頁共用 `style.css` 和 `assets/brand/fayang.css`，產品主頁的版面規則另在 `mountaindog/product.css`。
+首頁先介紹獨立開發者 Fayang，再列出產品與作品。各項產品使用同級列表，Mountain Dog 產品主頁展示狗狗日常與遊戲玩法，並提供封測及政策入口，開發者頁尾放品牌和聯絡方式。首頁與 Mountain Dog 主頁共用 `style.css` 和 `assets/brand/fayang.css`，產品主頁的版面規則另在 `mountaindog/product.css`。
 
 ## Colors
 使用 --bg、--surface、--card 三層背景；正文 --ink，次要文字 --muted，一般連結 --accent。新版品牌頁導覽和次要行動預設使用 --ink，滑鼠懸停與鍵盤焦點時使用 --accent。深色模式依 prefers-color-scheme 自動切換，完整對應值見 style.css。遊戲底色由 --game-tint 指定。Logo 固定品牌色不隨主題變更。
@@ -111,12 +111,12 @@ spacing:
 目錄用分隔線和留白區分產品。Mountain Dog 主頁的遊戲場景直接與文案並排或堆疊，政策區以 `--surface` 區分。文件閱讀頁保持平坦背景。
 
 ## Shapes
-品牌主按鈕最小高度 48px、圓角 8px。Mountain Dog 的場景從 `screen-2.jpg` 裁出，保留狗狗全身並排除手機系統列和遊戲操作面板。目錄與產品主頁共用 420w／720w WebP，產品主頁另提供 1080w。以固有尺寸預留空間，直角呈現並保持比例。
+品牌主按鈕最小高度 48px、圓角 8px。開發者首頁保留既有 `screen-2.jpg` 場景裁圖。Mountain Dog 產品主頁使用 `screenshots/v2/` 的實際遊戲截圖；場景與日常圖裁去系統列及操作區，玩法圖保留完整操作介面。素材來源、裁切與輸出尺寸見該目錄的 `README.md` 與 `provenance.json`。以固有尺寸預留空間，直角呈現並保持比例。
 
 ## Components
 - 產品列：名稱、類型、平台、狀態、實際畫面、簡介與明確的產品入口。各產品依需要提供次要行動，例如 Mountain Dog 的「加入封閉測試」。
 - 語言切換：最小高度 44px，清楚標示目標語言。
-- Mountain Dog 主頁：1024px 起大型名稱與場景左右分欄，較窄時先讀介紹與行動，再看場景。手機主要行動滿寬，各區隨文字自然增高。主要行動前往既有封測指南，次要行動跳至政策區。
+- Mountain Dog 主頁：1024px 起介紹與場景左右分欄，較窄時依介紹、場景、文字連結排序。先展示狗狗日常、餵食與成長，再提供封閉測試與 QR code；封測是次要入口。玩法截圖提供完整圖片連結，各區隨文字自然增高。
 - 產品政策入口：隱私權政策及服務條款各提供中英文連結，標出文件語言。每列最小高度 72px，640px 起為 88px。標誌及頁尾連回開發者首頁。
 - 目錄：原生 details/summary，窄版可收合，桌面常開；每個章節 ID 必須唯一。
 - 鍵盤焦點：2px accent 外框，整卡連結將焦點顯示在卡片外圍。
